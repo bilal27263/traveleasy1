@@ -92,3 +92,4 @@ export function CityTravelAgencies({ city }: CityTravelAgenciesProps) {
   )
 }
 
+export default CityTravelAgencies;

@@ -37,3 +37,5 @@ export function RelatedArticles({ city }: RelatedArticlesProps) {
   )
 }
 
+export default RelatedArticles;
+

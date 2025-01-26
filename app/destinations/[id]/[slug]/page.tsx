@@ -1,20 +1,27 @@
-import { notFound } from 'next/navigation'
-import CityTravelAgencies from '../../../components/city-travel-agencies'
-import CityTours from '../../../components/city-tours'
-import RelatedArticles from '../../../components/related-articles'
+import CityTravelAgencies from '@/components/city-travel-agencies';
+import CityTours from '@/components/city-tours';
+import RelatedArticles from '@/components/related-articles';
+import { notFound } from 'next/navigation';
 
 const destinations = [
   { slug: 'paris', name: 'Paris', description: 'The City of Light', image: '/images/paris.jpg' },
   { slug: 'tokyo', name: 'Tokyo', description: 'Where tradition meets future', image: '/images/tokyo.jpg' },
   { slug: 'new-york', name: 'New York', description: 'The Big Apple', image: '/images/new-york.jpg' },
   { slug: 'chefchaouen', name: 'Chefchaouen', description: 'The Blue Pearl', image: '/images/chefchaouen.jpg' },
-]
+];
 
-export default function DestinationPage({ params }: { params: { slug: string } }) {
-  const destination = destinations.find(d => d.slug === params.slug)
+interface DestinationProps {
+  params: {
+    slug: string;
+  };
+}
+
+export default function DestinationPage({ params }: DestinationProps) {
+  const destination = destinations.find(d => d.slug === params.slug);
 
   if (!destination) {
-    notFound()
+    notFound();
+    return null;
   }
 
   return (
@@ -50,6 +57,5 @@ export default function DestinationPage({ params }: { params: { slug: string } }
         <RelatedArticles destination={destination.name} />
       </section>
     </div>
-  )
+  );
 }
-

@@ -96,3 +96,4 @@ export function CityTours({ city }: CityToursProps) {
   )
 }
 
+export default CityTours;
