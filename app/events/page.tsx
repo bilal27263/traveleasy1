@@ -91,8 +91,8 @@ export default function EventsPage() {
         <Image
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/pexels-wendy-wei-1190297.jpg-Hy5Hy5Hy5Hy5Hy5Hy5Hy5Hy5Hy5Hy5"
           alt="Events Banner"
-          layout="fill"
-          objectFit="cover"
+          fill
+          style={{ objectFit: "cover" }}
           priority
         />
         <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-white">
@@ -155,8 +155,8 @@ export default function EventsPage() {
                 <Image
                   src={event.image}
                   alt={event.name}
-                  layout="fill"
-                  objectFit="cover"
+                  fill
+                  style={{ objectFit: "cover" }}
                 />
                 <Badge className={`absolute top-2 right-2 ${event.price === 'Free' ? 'bg-green-500' : 'bg-blue-500'}`}>
                   {event.price}

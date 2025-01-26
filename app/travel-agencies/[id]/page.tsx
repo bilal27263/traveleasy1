@@ -315,8 +315,8 @@ export default function TravelAgencyProfilePage() {
                       <Image
                         src={item.thumbnail}
                         alt="Video thumbnail"
-                        layout="fill"
-                        objectFit="cover"
+                        fill
+                        style={{ objectFit: "cover" }}
                       />
                       <div className="absolute inset-0 flex items-center justify-center">
                         <Button variant="secondary" size="sm">Play Video</Button>

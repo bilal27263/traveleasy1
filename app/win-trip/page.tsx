@@ -88,8 +88,8 @@ export default function WinTripPage() {
         <Image
           src="/placeholder-win-trip-banner.jpg"
           alt="Win Your Dream Trip"
-          layout="fill"
-          objectFit="cover"
+          fill
+          style={{ objectFit: "cover" }}
           priority
         />
         <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-white">
@@ -114,8 +114,8 @@ export default function WinTripPage() {
                       <Image
                         src={contest.image}
                         alt={contest.title}
-                        layout="fill"
-                        objectFit="cover"
+                        fill
+                        style={{ objectFit: "cover" }}
                       />
                       <Badge className="absolute top-2 right-2 bg-orange-500">
                         {contest.category}
@@ -230,8 +230,8 @@ export default function WinTripPage() {
                   <Image
                     src={contest.image}
                     alt={contest.title}
-                    layout="fill"
-                    objectFit="cover"
+                    fill
+                    style={{ objectFit: "cover" }}
                   />
                   <Badge className="absolute top-2 right-2 bg-orange-500">
                     {contest.category}
@@ -262,7 +262,7 @@ export default function WinTripPage() {
                   alt={sponsor.name}
                   width={100}
                   height={100}
-                  objectFit="contain"
+                  style={{ objectFit: "contain" }}
                 />
                 <p className="mt-2 text-center text-sm">{sponsor.name}</p>
               </div>

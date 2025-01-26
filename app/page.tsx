@@ -127,8 +127,8 @@ export default function Home() {
             <Image
               src="/morocco-map.jpg"
               alt="Map of Morocco"
-              layout="fill"
-              objectFit="cover"
+              fill
+              style={{ objectFit: "cover" }}
               className="rounded-lg"
             />
             {/* Add guide markers here */}

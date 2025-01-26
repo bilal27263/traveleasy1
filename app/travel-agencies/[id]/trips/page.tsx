@@ -149,8 +149,8 @@ export default function TripListingsPage() {
               <Image
                 src={trip.image}
                 alt={trip.title}
-                layout="fill"
-                objectFit="cover"
+                fill
+                style={{ objectFit: "cover" }}
               />
             </div>
             <CardContent className="p-4">

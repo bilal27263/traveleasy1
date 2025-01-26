@@ -1,16 +1,24 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { Gift } from 'lucide-react'
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Gift } from 'lucide-react';
 
 export function Navigation() {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   const isActive = (path: string) => {
-    return pathname === path ? 'text-orange-500 underline' : 'text-gray-600 hover:text-orange-500'
-  }
+    return pathname === path ? 'text-orange-500 underline' : 'text-gray-600 hover:text-orange-500';
+  };
+
+  const handleSignUp = () => {
+    alert('Sign Up button clicked!');
+  };
+
+  const handleLogIn = () => {
+    alert('Log In button clicked!');
+  };
 
   return (
     <nav className="bg-white shadow-md py-4 fixed top-0 left-0 right-0 z-50">
@@ -42,12 +50,11 @@ export function Navigation() {
             Community
           </Link>
           <div className="space-x-2">
-            <Button variant="outline">Sign Up</Button>
-            <Button>Log In</Button>
+            <Button variant="outline" onClick={handleSignUp}>Sign Up</Button>
+            <Button onClick={handleLogIn}>Log In</Button>
           </div>
         </div>
       </div>
     </nav>
-  )
+  );
 }
-

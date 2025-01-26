@@ -81,8 +81,8 @@ export default function TripDetailsPage() {
             <Image
               src={tripData.images[currentImageIndex]}
               alt={tripData.title}
-              layout="fill"
-              objectFit="cover"
+              fill
+              style={{ objectFit: "cover" }}
               className="rounded-lg"
             />
             <div className="absolute bottom-4 left-4 right-4 flex justify-center">
