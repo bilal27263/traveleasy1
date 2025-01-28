@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import dynamic from 'next/dynamic'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
