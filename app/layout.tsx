@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Navigation } from '@/components/navigation'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
@@ -12,10 +13,19 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'TravelEasy Morocco',
   description: 'Discover the magic of Morocco with TravelEasy',
+=======
+import type { Metadata } from 'next'
+import './globals.css'
+
+export const metadata: Metadata = {
+  title: 'v0 App',
+  description: 'Created with v0',
+>>>>>>> d7d080f (Integrated dashboard design and implemented authentication)
 }
 
 export default function RootLayout({
   children,
+<<<<<<< HEAD
 }: {
   children: React.ReactNode
 }) {
@@ -87,3 +97,14 @@ export default function RootLayout({
   )
 }
 
+=======
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  )
+}
+>>>>>>> d7d080f (Integrated dashboard design and implemented authentication)
