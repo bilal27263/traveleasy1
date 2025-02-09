@@ -1,35 +1,29 @@
-// pages/login.js
-import { signIn } from "next-auth/react";
-import { useState } from "react";
+// filepath: /workspaces/traveleasy1/minimal-next-app/pages/login.js
+import { useState } from 'react';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const router = useRouter();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
-    });
-  };
+    const handleLogin = async () => {
+        try {
+            const response = await axios.post('/api/login', { username, password });
+            localStorage.setItem('token', response.data.token);
+            router.push('/dashboard');
+        } catch (error) {
+            console.error('Login failed:', error);
+        }
+    };
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      <button type="submit">Login</button>
-    </form>
-  );
+    return (
+        <div>
+            <h1>Login</h1>
+            <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+            <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <button onClick={handleLogin}>Login</button>
+        </div>
+    );
 }
