@@ -1,34 +1,36 @@
-// pages/api/auth/[...nextauth].js
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
+import { SupabaseAdapter } from "@next-auth/supabase-adapter";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
 
 export default NextAuth({
   providers: [
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        username: { label: "Username", type: "text" },
-        password: { label: "Password", type: "password" }
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
       },
-      authorize: async (credentials) => {
-        // Add logic here to look up the user from the credentials supplied
-        const user = { id: 1, name: "User", email: "user@example.com" };
+      async authorize(credentials) {
+        const { data: user, error } = await supabase
+          .from("users")
+          .select("*")
+          .eq("email", credentials.email)
+          .single();
 
-        if (user) {
-          // Any object returned will be saved in `user` property of the JWT
-          return user;
-        } else {
-          // If you return null or false then the credentials will be rejected
-          return null;
+        if (error || !user) {
+          throw new Error("No user found with this email");
         }
-      }
-    })
+
+        return user;
+      },
+    }),
   ],
-  pages: {
-    signIn: '/auth/signin',
-    signOut: '/auth/signout',
-    error: '/auth/error', // Error code passed in query string as ?error=
-    verifyRequest: '/auth/verify-request', // (used for check email message)
-    newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
-  }
+  adapter: SupabaseAdapter(supabase),
+  secret: process.env.NEXTAUTH_SECRET,
 });
