@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 'use client'
 
 import Image from 'next/image'
@@ -278,7 +277,6 @@ export default function Home() {
   )
 }
 
-=======
 import Image from "next/image";
 
 export default function Home() {
@@ -380,4 +378,3 @@ export default function Home() {
     </div>
   );
 }
->>>>>>> d7d080f (Integrated dashboard design and implemented authentication)
