@@ -1,12 +1,12 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent } from '@/components/ui/card'
+import Button from '../../../components/ui/button'
+import Input from '../../../components/ui/input'
+import Textarea from '../../../components/ui/textarea'
+import { Card, CardContent } from '../../../components/ui/card'
 import { X, Camera } from 'lucide-react'
 
 // Ensure `cityData` is correctly referenced
