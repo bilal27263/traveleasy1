@@ -3,10 +3,11 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'next/navigation'
 import Image from 'next/image'
-import Button from '../../../components/ui/button'
-import Input from '../../../components/ui/input'
-import Textarea from '../../../components/ui/textarea'
-import { Card, CardContent } from '../../../components/ui/card'
+import Button from "../../components/ui/Button";
+import Card from "../../components/ui/Card";
+import Textarea from "../../components/ui/Textarea";
+
+ 
 import { X, Camera } from 'lucide-react'
 
 // Ensure `cityData` is correctly referenced
@@ -61,8 +62,8 @@ export default function CityDiscussionPage() {
         </div>
       </div>
 
-      <Card className="mb-8">
-        <CardContent className="p-6">
+      <Card>
+        <CardContent>
           <form className="space-y-4">
             <Textarea
               value={newComment}
