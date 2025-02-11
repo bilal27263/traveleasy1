@@ -1,14 +1,10 @@
-<<<<<<< HEAD
 // components/ui/button.tsx
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
-=======
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
 import { cva, type VariantProps } from "class-variance-authority"
-
->>>>>>> d7d080f (Integrated dashboard design and implemented authentication)
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
@@ -60,8 +56,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 Button.displayName = "Button"
 
-<<<<<<< HEAD
+
 export { Button, buttonVariants }
-=======
+
 export { Button, buttonVariants }
->>>>>>> d7d080f (Integrated dashboard design and implemented authentication)

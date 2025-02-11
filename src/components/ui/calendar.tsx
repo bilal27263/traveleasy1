@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 // components/ui/calendar.tsx
 import React from 'react';
 import { Calendar as ReactCalendar } from 'react-calendar';
@@ -12,7 +12,6 @@ const Calendar = () => {
 };
 
 export { Calendar };
-=======
 "use client"
 
 import * as React from "react"
@@ -79,4 +78,3 @@ function Calendar({
 Calendar.displayName = "Calendar"
 
 export { Calendar }
->>>>>>> d7d080f (Integrated dashboard design and implemented authentication)
