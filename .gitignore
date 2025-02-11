@@ -2,8 +2,6 @@
 
 # dependencies
 /node_modules
-<<<<<<< HEAD
-=======
 /.pnp
 .pnp.*
 .yarn/*
@@ -11,10 +9,11 @@
 !.yarn/plugins
 !.yarn/releases
 !.yarn/versions
-
+# Environment variables
+.env.local
 # testing
 /coverage
->>>>>>> d7d080f (Integrated dashboard design and implemented authentication)
+ d7d080f (Integrated dashboard design and implemented authentication)
 
 # next.js
 /.next/
@@ -23,24 +22,23 @@
 # production
 /build
 
-<<<<<<< HEAD
-=======
+
 # misc
 .DS_Store
 *.pem
 
->>>>>>> d7d080f (Integrated dashboard design and implemented authentication)
-# debug
+ 
+# ebug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-<<<<<<< HEAD
+
 # env files
-=======
+
 # env files (can opt-in for committing if needed)
->>>>>>> d7d080f (Integrated dashboard design and implemented authentication)
+ 
 .env*
 
 # vercel
@@ -48,8 +46,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
-<<<<<<< HEAD
+
 next-env.d.ts
-=======
+
 next-env.d.ts
->>>>>>> d7d080f (Integrated dashboard design and implemented authentication)
