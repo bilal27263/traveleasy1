@@ -1,0 +1,13 @@
+/* Add styles for buttons to ensure they are visible */
+button {
+  display: inline-block;
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Ensure buttons are not hidden */
+.hidden {
+  display: none;
+}
