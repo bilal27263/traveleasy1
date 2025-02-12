@@ -13,8 +13,8 @@ export default function AvoidScamsMoroccoArticle() {
         <Image
           src="/images/morocco-market.jpg"
           alt="Moroccan Market"
-          fill
-          style={{ objectFit: "cover" }}
+          layout="fill"
+          objectFit="cover"
         />
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <h1 className="text-4xl md:text-5xl font-bold text-white text-center">

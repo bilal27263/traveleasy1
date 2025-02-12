@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -89,8 +88,8 @@ export default function WinTripPage() {
         <Image
           src="/placeholder-win-trip-banner.jpg"
           alt="Win Your Dream Trip"
-          fill
-          style={{ objectFit: "cover" }}
+          layout="fill"
+          objectFit="cover"
           priority
         />
         <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center justify-center text-white">
@@ -115,8 +114,8 @@ export default function WinTripPage() {
                       <Image
                         src={contest.image}
                         alt={contest.title}
-                        fill
-                        style={{ objectFit: "cover" }}
+                        layout="fill"
+                        objectFit="cover"
                       />
                       <Badge className="absolute top-2 right-2 bg-orange-500">
                         {contest.category}
@@ -231,8 +230,8 @@ export default function WinTripPage() {
                   <Image
                     src={contest.image}
                     alt={contest.title}
-                    fill
-                    style={{ objectFit: "cover" }}
+                    layout="fill"
+                    objectFit="cover"
                   />
                   <Badge className="absolute top-2 right-2 bg-orange-500">
                     {contest.category}
@@ -263,7 +262,7 @@ export default function WinTripPage() {
                   alt={sponsor.name}
                   width={100}
                   height={100}
-                  style={{ objectFit: "contain" }}
+                  objectFit="contain"
                 />
                 <p className="mt-2 text-center text-sm">{sponsor.name}</p>
               </div>

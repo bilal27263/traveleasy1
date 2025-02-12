@@ -1,15 +1,20 @@
-// app/events/create/page.tsx
-"use client";
+'use client'
 
-import React, { useState } from "react";
-import { Calendar } from "@/components/ui/calendar";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { Slider } from "@/components/ui/slider";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { CalendarIcon, MapPin, Plus, Image, AlertTriangle } from "lucide-react";
+import { useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Label } from '@/components/ui/label'
+import { Switch } from '@/components/ui/switch'
+import { Slider } from "@/components/ui/slider"
+import { Calendar } from "@/components/ui/calendar"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { cn } from "@/lib/utils"
+import { format } from "date-fns"
+import { CalendarIcon, MapPin, Plus, Image, AlertTriangle } from 'lucide-react'
 import {
   Dialog,
   DialogContent,
@@ -18,110 +23,85 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Badge } from "@/components/ui/badge";
-// Import Card components
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-
-// Your component code continues here...
-// Import Input component (example: adjust the path according to your project structure)
-import { Input } from "@/components/ui/input";
-
-// Your component code continues here...
-// Import Select component (example: adjust the path according to your project structure)
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-
-// Your component code continues here...
-// Add these imports at the top of the file
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-
-// Import Tabs components (example: adjust the path according to your project structure)
-import { Tabs, TabsContent } from "@/components/ui/tabs";
+} from "@/components/ui/dialog"
+import { Badge } from '@/components/ui/badge'
 
 export default function CreateEventPage() {
-  const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(1)
   const [eventData, setEventData] = useState({
-    name: "",
-    type: "",
+    name: '',
+    type: '',
     date: undefined as Date | undefined,
-    time: "",
-    duration: "",
-    description: "",
-    location: "",
-    price: "",
-    capacity: "",
+    time: '',
+    duration: '',
+    description: '',
+    location: '',
+    price: '',
+    capacity: '',
     tags: [] as string[],
-    organizer: "",
-    contactEmail: "",
-    contactPhone: "",
-  });
+    organizer: '',
+    contactEmail: '',
+    contactPhone: '',
+  })
 
   const [premiumFeatures, setPremiumFeatures] = useState({
     featured: false,
     promotionBanner: false,
-  });
+  })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setEventData((prev) => ({ ...prev, [name]: value }));
-  };
+    const { name, value } = e.target
+    setEventData(prev => ({ ...prev, [name]: value }))
+  }
 
-  const handlePremiumFeatureToggle = (feature: "featured" | "promotionBanner") => {
-    setPremiumFeatures((prev) => ({ ...prev, [feature]: !prev[feature] }));
-  };
+  const handlePremiumFeatureToggle = (feature: 'featured' | 'promotionBanner') => {
+    setPremiumFeatures(prev => ({ ...prev, [feature]: !prev[feature] }))
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Event data:", eventData);
-    console.log("Premium features:", premiumFeatures);
+    e.preventDefault()
+    console.log('Event data:', eventData)
+    console.log('Premium features:', premiumFeatures)
     // Here you would typically send the data to your backend
-  };
+  }
 
   const steps = [
-    { number: 1, name: "Basic Info" },
-    { number: 2, name: "Details" },
-    { number: 3, name: "Location" },
-    { number: 4, name: "Promotion" },
-  ];
+    { number: 1, name: 'Basic Info' },
+    { number: 2, name: 'Details' },
+    { number: 3, name: 'Location' },
+    { number: 4, name: 'Promotion' },
+  ]
 
   return (
     <div className="container mx-auto py-12 px-4">
       <h1 className="text-4xl font-bold mb-8">Create Your Event</h1>
-
+      
       {/* Progress indicator */}
       <div className="mb-8">
         <ol className="flex items-center w-full">
           {steps.map((step, index) => (
-            <li
-              key={step.number}
-              className={cn("flex items-center", index < steps.length - 1 ? "w-full" : "flex-1")}
-            >
-              <div
-                className={cn(
-                  "flex items-center justify-center w-10 h-10 rounded-full lg:h-12 lg:w-12 shrink-0",
-                  currentStep >= step.number ? "bg-orange-600 text-white" : "bg-gray-100 text-gray-600"
-                )}
-              >
+            <li key={step.number} className={cn(
+              "flex items-center",
+              index < steps.length - 1 ? "w-full" : "flex-1"
+            )}>
+              <div className={cn(
+                "flex items-center justify-center w-10 h-10 rounded-full lg:h-12 lg:w-12 shrink-0",
+                currentStep >= step.number ? "bg-orange-600 text-white" : "bg-gray-100 text-gray-600"
+              )}>
                 {step.number}
               </div>
-              <div
-                className={cn(
-                  "hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700",
-                  index < steps.length - 1 ? "flex" : "hidden"
-                )}
-              ></div>
+              <div className={cn(
+                "hidden sm:flex w-full bg-gray-200 h-0.5 dark:bg-gray-700",
+                index < steps.length - 1 ? "flex" : "hidden"
+              )}></div>
               <span className="hidden sm:inline-block ml-2 text-sm font-medium">{step.name}</span>
             </li>
           ))}
         </ol>
       </div>
-
+      
       <form onSubmit={handleSubmit}>
-        <Tabs
-          value={`step${currentStep}`}
-          onValueChange={(value) => setCurrentStep(parseInt(value.replace("step", "")))}
-        >
+        <Tabs value={`step${currentStep}`} onValueChange={(value) => setCurrentStep(parseInt(value.replace('step', '')))}>
           <TabsContent value="step1">
             <Card>
               <CardHeader>
@@ -140,10 +120,7 @@ export default function CreateEventPage() {
                 </div>
                 <div>
                   <Label htmlFor="type">Event Type</Label>
-                  <Select
-                    name="type"
-                    onValueChange={(value) => setEventData((prev) => ({ ...prev, type: value }))}
-                  >
+                  <Select name="type" onValueChange={(value) => setEventData(prev => ({ ...prev, type: value }))}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select event type" />
                     </SelectTrigger>
@@ -174,7 +151,7 @@ export default function CreateEventPage() {
                       <Calendar
                         mode="single"
                         selected={eventData.date}
-                        onSelect={(date) => setEventData((prev) => ({ ...prev, date }))}
+                        onSelect={(date) => setEventData(prev => ({ ...prev, date }))}
                         initialFocus
                       />
                     </PopoverContent>
@@ -253,12 +230,7 @@ export default function CreateEventPage() {
                           variant="ghost"
                           size="sm"
                           className="ml-2 h-auto p-0 text-base"
-                          onClick={() =>
-                            setEventData((prev) => ({
-                              ...prev,
-                              tags: prev.tags.filter((_, i) => i !== index),
-                            }))
-                          }
+                          onClick={() => setEventData(prev => ({ ...prev, tags: prev.tags.filter((_, i) => i !== index) }))}
                         >
                           ×
                         </Button>
@@ -268,15 +240,12 @@ export default function CreateEventPage() {
                       placeholder="Add a tag"
                       className="w-32"
                       onKeyPress={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          const target = e.target as HTMLInputElement;
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          const target = e.target as HTMLInputElement
                           if (target.value) {
-                            setEventData((prev) => ({
-                              ...prev,
-                              tags: [...prev.tags, target.value],
-                            }));
-                            target.value = "";
+                            setEventData(prev => ({ ...prev, tags: [...prev.tags, target.value] }))
+                            target.value = ''
                           }
                         }
                       }}
@@ -366,7 +335,7 @@ export default function CreateEventPage() {
                   <Switch
                     id="featured"
                     checked={premiumFeatures.featured}
-                    onCheckedChange={() => handlePremiumFeatureToggle("featured")}
+                    onCheckedChange={() => handlePremiumFeatureToggle('featured')}
                   />
                 </div>
                 <div className="flex items-center justify-between">
@@ -377,7 +346,7 @@ export default function CreateEventPage() {
                   <Switch
                     id="promotionBanner"
                     checked={premiumFeatures.promotionBanner}
-                    onCheckedChange={() => handlePremiumFeatureToggle("promotionBanner")}
+                    onCheckedChange={() => handlePremiumFeatureToggle('promotionBanner')}
                   />
                 </div>
                 <div className="mt-4">
@@ -390,18 +359,18 @@ export default function CreateEventPage() {
         </Tabs>
 
         <div className="mt-8 flex justify-between">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setCurrentStep((prev) => Math.max(prev - 1, 1))}
+          <Button 
+            type="button" 
+            variant="outline" 
+            onClick={() => setCurrentStep(prev => Math.max(prev - 1, 1))}
             disabled={currentStep === 1}
           >
             Previous
           </Button>
           {currentStep < 4 ? (
-            <Button
-              type="button"
-              onClick={() => setCurrentStep((prev) => Math.min(prev + 1, 4))}
+            <Button 
+              type="button" 
+              onClick={() => setCurrentStep(prev => Math.min(prev + 1, 4))}
             >
               Next
             </Button>
@@ -439,16 +408,16 @@ export default function CreateEventPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <h2 className="text-2xl font-bold">{eventData.name || "Event Name"}</h2>
+            <h2 className="text-2xl font-bold">{eventData.name || 'Event Name'}</h2>
             <div className="flex items-center space-x-2">
               <CalendarIcon className="h-5 w-5 text-gray-500" />
-              <span>{eventData.date ? format(eventData.date, "PPP") : "Date"} at {eventData.time || "Time"}</span>
+              <span>{eventData.date ? format(eventData.date, "PPP") : 'Date'} at {eventData.time || 'Time'}</span>
             </div>
             <div className="flex items-center space-x-2">
               <MapPin className="h-5 w-5 text-gray-500" />
-              <span>{eventData.location || "Location"}</span>
+              <span>{eventData.location || 'Location'}</span>
             </div>
-            <p className="text-gray-600">{eventData.description || "Event description will appear here."}</p>
+            <p className="text-gray-600">{eventData.description || 'Event description will appear here.'}</p>
             <div className="flex flex-wrap gap-2">
               {eventData.tags.map((tag, index) => (
                 <Badge key={index} variant="secondary">{tag}</Badge>
@@ -481,5 +450,6 @@ export default function CreateEventPage() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
+

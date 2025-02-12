@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -35,7 +35,7 @@ const mockResults = {
   ],
 }
 
-function SearchResultsContent() {
+export default function SearchResultsPage() {
   const searchParams = useSearchParams()
   const query = searchParams.get('q') || ''
   const [activeTab, setActiveTab] = useState('all')
@@ -144,10 +144,3 @@ function SearchResultsContent() {
   )
 }
 
-export default function SearchResultsPage() {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <SearchResultsContent />
-    </Suspense>
-  )
-}
