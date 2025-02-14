@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+export const dynamic = "force-dynamic";
+
+import { Suspense, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -62,15 +64,15 @@ const mockResults = {
   ],
 }
 
-export default function SearchResultsPage() {
-  const searchParams = useSearchParams()
-  const query = searchParams.get("q") || ""
-  const [activeTab, setActiveTab] = useState("all")
-  const [sortBy, setSortBy] = useState("relevance")
+function SearchResultsContent() {
+  const searchParams = useSearchParams();
+  const query = searchParams.get("q") || "";
+  const [activeTab, setActiveTab] = useState("all");
+  const [sortBy, setSortBy] = useState("relevance");
 
   // In a real application, you would fetch results based on the query
   // For now, we'll just use the mock data
-  const results = mockResults
+  const results = mockResults;
 
   return (
     <div className="container mx-auto py-8">
@@ -178,6 +180,13 @@ export default function SearchResultsPage() {
         ))}
       </div>
     </div>
-  )
+  );
 }
 
+export default function SearchResultsPage() {
+  return (
+    <Suspense fallback={<div>Loading search results...</div>}>
+      <SearchResultsContent />
+    </Suspense>
+  );
+}
