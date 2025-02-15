@@ -148,6 +148,44 @@ export default function Home() {
         </div>
       </section>
 
+      {/* New Advertisement Section */}
+      <section className="py-16 bg-gradient-to-r from-orange-500 to-pink-500 text-white">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-8 text-center">Join Travel Easy Today</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <FeatureCard
+              icon="🧑‍💼"
+              title="Join as a Travel Agency"
+              description="Create your profile & showcase your services."
+            />
+            <FeatureCard
+              icon="🧭"
+              title="Become a Trusted Tour Guide"
+              description="Build your follower base & offer unique experiences."
+            />
+            <FeatureCard
+              icon="🌍"
+              title="Share Your Inspiring Travel Story"
+              description="Join our community & inspire other travelers."
+            />
+            <FeatureCard
+              icon="🤝"
+              title="Find Your Travel Buddy"
+              description="Connect with fellow travelers heading to your next destination."
+            />
+          </div>
+          <div className="text-center mt-12">
+            <Button
+              size="lg"
+              onClick={() => setShowAuthPopup(true)}
+              className="bg-white text-orange-500 hover:bg-gray-100"
+            >
+              Register Now
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Destinations and Discussions */}
       <section className="py-16">
         <div className="container mx-auto">
@@ -266,6 +304,18 @@ export default function Home() {
 
       <AuthPopup open={showAuthPopup} onOpenChange={setShowAuthPopup} />
     </div>
+  )
+}
+
+function FeatureCard({ icon, title, description }) {
+  return (
+    <Card className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg">
+      <CardContent className="p-6 text-center">
+        <div className="text-4xl mb-4">{icon}</div>
+        <h3 className="text-xl font-semibold mb-2">{title}</h3>
+        <p className="text-sm">{description}</p>
+      </CardContent>
+    </Card>
   )
 }
 
