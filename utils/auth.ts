@@ -13,7 +13,7 @@ export const redirectToDashboard = (userType: string, router: AppRouterInstance)
       router.push("/dashboard/user")
       break
     default:
-      router.push("/dashboard")
+      router.push("/select-user-type")
   }
 }
 

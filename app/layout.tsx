@@ -10,6 +10,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "TravelEasy Morocco",
   description: "Discover the magic of Morocco with TravelEasy",
+    generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -29,3 +30,6 @@ export default function RootLayout({
   )
 }
 
+
+
+import './globals.css'

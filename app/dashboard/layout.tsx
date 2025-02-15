@@ -7,6 +7,7 @@ import { supabase } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Home, Map, FileText, Calendar, Users, Star, BarChart2, Settings, LogOut } from "lucide-react"
+import { useAuth } from "@/hooks/auth"
 
 const commonSidebarItems = [
   { name: "Overview", icon: Home, href: "/dashboard" },
@@ -35,17 +36,15 @@ const userSidebarItems = [
 ]
 
 export default function DashboardLayout({ children }) {
-  const [user, setUser] = useState(null)
-  const [userType, setUserType] = useState(null)
+  const { user, logout } = useAuth()
   const router = useRouter()
+  const [userType, setUserType] = useState(null)
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (user) {
-        setUser(user)
+      if (!user) {
+        router.push("/")
+      } else {
         const { data, error } = await supabase.from("profiles").select("user_type").eq("id", user.id).single()
         if (error) {
           console.error("Error fetching user type:", error)
@@ -53,16 +52,19 @@ export default function DashboardLayout({ children }) {
         } else {
           setUserType(data.user_type)
         }
-      } else {
-        router.push("/")
       }
     }
     fetchUserData()
-  }, [router])
+  }, [router, user])
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.push("/")
+    const success = await logout()
+    if (success) {
+      router.push("/")
+    } else {
+      // Handle error
+      console.error("Failed to log out")
+    }
   }
 
   if (!user || !userType) {

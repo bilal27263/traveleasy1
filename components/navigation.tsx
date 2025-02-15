@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
@@ -8,22 +8,16 @@ import { Gift } from "lucide-react"
 import { AuthPopup } from "./auth-popup"
 import { supabase } from "@/lib/supabase"
 import { useToast } from "@/components/ui/use-toast"
+import { useAuth } from "@/hooks/useAuth"
+import { redirectToDashboard } from "@/utils/auth"
+import { useRouter } from "next/navigation"
 
 export function Navigation() {
   const pathname = usePathname()
   const [showAuthPopup, setShowAuthPopup] = useState(false)
-  const [user, setUser] = useState(null)
+  const router = useRouter()
+  const { user, userType } = useAuth()
   const { toast } = useToast()
-
-  useEffect(() => {
-    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user ?? null)
-    })
-
-    return () => {
-      authListener.subscription.unsubscribe()
-    }
-  }, [])
 
   const isActive = (path: string) => {
     return pathname === path ? "text-orange-500 underline" : "text-gray-600 hover:text-orange-500"
@@ -37,6 +31,7 @@ export function Navigation() {
         title: "Logged out successfully",
         description: "Come back soon!",
       })
+      router.push("/")
     } catch (error) {
       toast({
         title: "Error",
@@ -78,9 +73,9 @@ export function Navigation() {
           <div className="space-x-2">
             {user ? (
               <>
-                <Link href="/dashboard">
-                  <Button variant="outline">Dashboard</Button>
-                </Link>
+                <Button variant="outline" onClick={() => redirectToDashboard(userType, router)}>
+                  Dashboard
+                </Button>
                 <Button onClick={handleLogout}>Log Out</Button>
               </>
             ) : (

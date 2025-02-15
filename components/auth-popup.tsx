@@ -45,28 +45,50 @@ export function AuthPopup({ open, onOpenChange, initialMode = "signup" }: AuthPo
           },
         })
         if (error) throw error
-        toast({
-          title: "Sign up successful",
-          description: "Please check your email for verification.",
-        })
-        redirectToDashboard(userType, router)
+
+        if (data.user) {
+          const { error: profileError } = await supabase
+            .from("profiles")
+            .upsert({ id: data.user.id, user_type: userType })
+
+          if (profileError) throw profileError
+
+          toast({
+            title: "Sign up successful",
+            description: "Please check your email for verification.",
+          })
+          redirectToDashboard(userType, router)
+        } else {
+          throw new Error("User data not available after signup")
+        }
       } else {
         const { data, error } = await supabase.auth.signInWithPassword({
           email,
           password,
         })
         if (error) throw error
-        const { data: userData, error: userError } = await supabase
-          .from("profiles")
-          .select("user_type")
-          .eq("id", data.user.id)
-          .single()
-        if (userError) throw userError
-        toast({
-          title: "Login successful",
-          description: "Welcome back!",
-        })
-        redirectToDashboard(userData.user_type, router)
+
+        if (data.user) {
+          const { data: userData, error: userError } = await supabase
+            .from("profiles")
+            .select("user_type")
+            .eq("id", data.user.id)
+            .single()
+
+          if (userError) throw userError
+
+          if (!userData?.user_type) {
+            router.push("/select-user-type")
+          } else {
+            toast({
+              title: "Login successful",
+              description: "Welcome back!",
+            })
+            redirectToDashboard(userData.user_type, router)
+          }
+        } else {
+          throw new Error("User data not available after login")
+        }
       }
       onOpenChange(false)
     } catch (error) {
