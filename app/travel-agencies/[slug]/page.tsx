@@ -29,7 +29,7 @@ import { ReviewCarousel } from "@/components/review-carousel"
 
 // Mock data for the agency
 const agencyData = {
-  id: "morocco-adventures",
+  slug: "morocco-adventures",
   name: "Morocco Adventures",
   logo: "/logos/morocco-adventures.png",
   tagline: "Discover the Magic of Morocco",
@@ -63,7 +63,7 @@ const agencyData = {
 // Mock data for trips
 const trips = [
   {
-    id: "1",
+    slug: "1",
     title: "Marrakech City Tour",
     image: "/trips/marrakech-city-tour.jpg",
     rating: 4.8,
@@ -74,7 +74,7 @@ const trips = [
     dates: "Daily departures",
   },
   {
-    id: "2",
+    slug: "2",
     title: "Sahara Desert Adventure",
     image: "/trips/sahara-desert-adventure.jpg",
     rating: 4.9,
@@ -85,7 +85,7 @@ const trips = [
     dates: "Every Monday and Thursday",
   },
   {
-    id: "3",
+    slug: "3",
     title: "Fes Medina Explorer",
     image: "/trips/fes-medina-explorer.jpg",
     rating: 4.7,
@@ -99,46 +99,46 @@ const trips = [
 
 // Mock data for gallery content
 const galleryContent = [
-  { id: "1", type: "image", url: "/gallery/morocco-1.jpg", likes: 45, caption: "Sunset over the Sahara" },
+  { slug: "1", type: "image", url: "/gallery/morocco-1.jpg", likes: 45, caption: "Sunset over the Sahara" },
   {
-    id: "2",
+    slug: "2",
     type: "video",
     url: "/gallery/morocco-video-1.mp4",
     thumbnail: "/gallery/morocco-video-1-thumb.jpg",
     likes: 78,
     caption: "Exploring the vibrant souks",
   },
-  { id: "3", type: "image", url: "/gallery/morocco-2.jpg", likes: 32, caption: "Traditional Moroccan tea ceremony" },
-  { id: "4", type: "image", url: "/gallery/morocco-3.jpg", likes: 56, caption: "Chefchaouen, the Blue Pearl" },
+  { slug: "3", type: "image", url: "/gallery/morocco-2.jpg", likes: 32, caption: "Traditional Moroccan tea ceremony" },
+  { slug: "4", type: "image", url: "/gallery/morocco-3.jpg", likes: 56, caption: "Chefchaouen, the Blue Pearl" },
   {
-    id: "5",
+    slug: "5",
     type: "video",
     url: "/gallery/morocco-video-2.mp4",
     thumbnail: "/gallery/morocco-video-2-thumb.jpg",
     likes: 92,
     caption: "Camel trek through the dunes",
   },
-  { id: "6", type: "image", url: "/gallery/morocco-4.jpg", likes: 41, caption: "Ancient ruins of Volubilis" },
+  { slug: "6", type: "image", url: "/gallery/morocco-4.jpg", likes: 41, caption: "Ancient ruins of Volubilis" },
 ]
 
 // Mock data for guides
 const guides = [
   {
-    id: "1",
+    slug: "1",
     name: "Hassan",
     image: "/guides/hassan.jpg",
     specialization: "Cultural Expert",
     bio: "With 15 years of experience, Hassan brings Morocco's rich history to life.",
   },
   {
-    id: "2",
+    slug: "2",
     name: "Amina",
     image: "/guides/amina.jpg",
     specialization: "Adventure Guide",
     bio: "Amina leads our most thrilling desert and mountain expeditions.",
   },
   {
-    id: "3",
+    slug: "3",
     name: "Youssef",
     image: "/guides/youssef.jpg",
     specialization: "Culinary Specialist",
@@ -149,19 +149,19 @@ const guides = [
 // Mock data for reviews
 const reviews = [
   {
-    id: "1",
+    slug: "1",
     user: { name: "Sarah T.", avatar: "/avatars/sarah.jpg" },
     rating: 5,
     text: "An unforgettable journey through Morocco. Every detail was perfect!",
   },
   {
-    id: "2",
+    slug: "2",
     user: { name: "Michael R.", avatar: "/avatars/michael.jpg" },
     rating: 4,
     text: "Great mix of culture and adventure. Highly recommend the desert tour.",
   },
   {
-    id: "3",
+    slug: "3",
     user: { name: "Emma L.", avatar: "/avatars/emma.jpg" },
     rating: 5,
     text: "Morocco Adventures made our family trip magical. The kids loved it!",
@@ -169,7 +169,7 @@ const reviews = [
 ]
 
 export default function TravelAgencyProfilePage() {
-  const { id } = useParams<{ id: string }>()
+  const { slug } = useParams<{ slug: string }>()
   const [followersCount, setFollowersCount] = useState(agencyData.followers)
   const [isFollowing, setIsFollowing] = useState(false)
   const [email, setEmail] = useState("")
@@ -199,18 +199,20 @@ export default function TravelAgencyProfilePage() {
     setEmail("")
   }
 
-  const handleLike = (contentId: string) => {
-    setLikedContent((prev) => (prev.includes(contentId) ? prev.filter((id) => id !== contentId) : [...prev, contentId]))
+  const handleLike = (contentSlug: string) => {
+    setLikedContent((prev) =>
+      prev.includes(contentSlug) ? prev.filter((slug) => slug !== contentSlug) : [...prev, contentSlug],
+    )
   }
 
-  const handleShare = (contentId: string) => {
-    console.log("Sharing content:", contentId)
+  const handleShare = (contentSlug: string) => {
+    console.log("Sharing content:", contentSlug)
     // Implement share functionality here
   }
 
   const sortedContent = [...galleryContent].sort((a, b) => {
     if (sortBy === "newest") {
-      return Number.parseInt(b.id) - Number.parseInt(a.id)
+      return Number.parseInt(b.slug) - Number.parseInt(a.slug)
     } else if (sortBy === "mostLiked") {
       return b.likes - a.likes
     }
@@ -229,7 +231,7 @@ export default function TravelAgencyProfilePage() {
           <div className="flex flex-col md:flex-row items-center justify-between">
             <div className="flex items-center mb-4 md:mb-0">
               <Image
-                src={agencyData.logo}
+                src={agencyData.logo || "/placeholder.svg"}
                 alt={agencyData.name}
                 width={100}
                 height={100}
@@ -329,9 +331,9 @@ export default function TravelAgencyProfilePage() {
           <h2 className="text-2xl font-bold mb-6">Featured Trips</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {trips.map((trip) => (
-              <Card key={trip.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
+              <Card key={trip.slug} className="overflow-hidden hover:shadow-lg transition-shadow duration-300">
                 <Image
-                  src={trip.image}
+                  src={trip.image || "/placeholder.svg"}
                   alt={trip.title}
                   width={400}
                   height={200}
@@ -354,7 +356,7 @@ export default function TravelAgencyProfilePage() {
                   </p>
                 </CardContent>
                 <CardFooter className="bg-gray-50 p-4">
-                  <Link href={`/trips/${trip.id}`} className="w-full">
+                  <Link href={`/trips/${trip.slug}`} className="w-full">
                     <Button className="w-full">View Details</Button>
                   </Link>
                 </CardFooter>
@@ -382,11 +384,16 @@ export default function TravelAgencyProfilePage() {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {paginatedContent.map((item) => (
-              <Card key={item.id} className="overflow-hidden">
+              <Card key={item.slug} className="overflow-hidden">
                 <div className="relative">
                   {item.type === "video" ? (
                     <div className="relative h-48">
-                      <Image src={item.thumbnail} alt="Video thumbnail" layout="fill" objectFit="cover" />
+                      <Image
+                        src={item.thumbnail || "/placeholder.svg"}
+                        alt="Video thumbnail"
+                        layout="fill"
+                        objectFit="cover"
+                      />
                       <div className="absolute inset-0 flex items-center justify-center">
                         <Button variant="secondary" size="sm">
                           Play Video
@@ -395,7 +402,7 @@ export default function TravelAgencyProfilePage() {
                     </div>
                   ) : (
                     <Image
-                      src={item.url}
+                      src={item.url || "/placeholder.svg"}
                       alt="Gallery image"
                       width={400}
                       height={300}
@@ -409,13 +416,13 @@ export default function TravelAgencyProfilePage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleLike(item.id)}
-                      className={likedContent.includes(item.id) ? "text-red-500" : ""}
+                      onClick={() => handleLike(item.slug)}
+                      className={likedContent.includes(item.slug) ? "text-red-500" : ""}
                     >
-                      <Heart className={`mr-2 h-4 w-4 ${likedContent.includes(item.id) ? "fill-current" : ""}`} />
-                      {item.likes + (likedContent.includes(item.id) ? 1 : 0)}
+                      <Heart className={`mr-2 h-4 w-4 ${likedContent.includes(item.slug) ? "fill-current" : ""}`} />
+                      {item.likes + (likedContent.includes(item.slug) ? 1 : 0)}
                     </Button>
-                    <Button variant="ghost" size="sm" onClick={() => handleShare(item.id)}>
+                    <Button variant="ghost" size="sm" onClick={() => handleShare(item.slug)}>
                       <Share2 className="mr-2 h-4 w-4" /> Share
                     </Button>
                   </div>
@@ -474,10 +481,10 @@ export default function TravelAgencyProfilePage() {
           <h2 className="text-2xl font-bold mb-6">Our Expert Guides</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {guides.map((guide) => (
-              <Card key={guide.id}>
+              <Card key={guide.slug}>
                 <CardContent className="p-6 text-center">
                   <Image
-                    src={guide.image}
+                    src={guide.image || "/placeholder.svg"}
                     alt={guide.name}
                     width={120}
                     height={120}
