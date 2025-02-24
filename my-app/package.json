@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    // ... other dependencies
-    "recharts": "^2.5.0"
-  }
-}
-
