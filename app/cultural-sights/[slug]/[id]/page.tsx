@@ -107,7 +107,8 @@ const sightsData = {
 }
 
 export default function CulturalSightPage() {
-  const { id } = useParams<{ id: string }>()
+  const params = useParams<{ id?: string }>()
+  const id = params?.id ?? "default-id" // Replace with a fallback value
   const router = useRouter()
   const sight = sightsData[id as keyof typeof sightsData]
 

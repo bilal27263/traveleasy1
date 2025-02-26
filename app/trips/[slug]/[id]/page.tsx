@@ -64,7 +64,8 @@ const relatedTrips = [
 ]
 
 export default function TripDetailsPage() {
-  const { id } = useParams<{ id: string }>()
+  const params = useParams<{ id?: string }>()
+  const id = params?.id ?? "default-id"
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   return (

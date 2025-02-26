@@ -2,10 +2,11 @@
 
 import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabase"
+import { User } from "@supabase/supabase-js"
 
 export function useAuth() {
-  const [user, setUser] = useState(null)
-  const [userType, setUserType] = useState(null)
+  const [user, setUser] = useState<User | null>(null)
+  const [userType, setUserType] = useState<string>("tourist")
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -14,9 +15,13 @@ export function useAuth() {
       } = await supabase.auth.getUser()
       if (user) {
         setUser(user)
-        const { data, error } = await supabase.from("profiles").select("user_type").eq("id", user.id).single()
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("user_type")
+          .eq("id", user.id)
+          .single()
         if (!error) {
-          setUserType(data.user_type)
+          setUserType(data?.user_type || "")
         }
       }
     }
@@ -26,12 +31,16 @@ export function useAuth() {
     const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
       setUser(session?.user ?? null)
       if (session?.user) {
-        const { data, error } = await supabase.from("profiles").select("user_type").eq("id", session.user.id).single()
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("user_type")
+          .eq("id", session.user.id)
+          .single()
         if (!error) {
-          setUserType(data.user_type)
+          setUserType(data?.user_type || "")
         }
       } else {
-        setUserType(null)
+        setUserType("tourist")
       }
     })
 
@@ -51,4 +60,3 @@ export function useAuth() {
 
   return { user, userType, logout }
 }
-

@@ -8,6 +8,15 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Home, Map, FileText, Calendar, Users, Star, BarChart2, Settings } from "lucide-react"
 
+// Update the User interface to allow email to be string | undefined
+interface User {
+  email?: string 
+  id: string
+  user_metadata: {
+    avatar_url?: string
+  }
+}
+
 const dashboardButtons = [
   { name: "Home", icon: Home, href: "/dashboard" },
   { name: "Trips", icon: Map, href: "/dashboard/trips" },
@@ -20,7 +29,8 @@ const dashboardButtons = [
 ]
 
 export default function DashboardPage() {
-  const [user, setUser] = useState(null)
+  // Set the user state to User | null
+  const [user, setUser] = useState<User | null>(null)
   const router = useRouter()
   const [activeButton, setActiveButton] = useState("Home")
 
@@ -38,6 +48,7 @@ export default function DashboardPage() {
     fetchUser()
   }, [router])
 
+  // Handle the loading state when user data is not available yet
   if (!user) {
     return <div>Loading...</div>
   }
@@ -45,7 +56,8 @@ export default function DashboardPage() {
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-4">Welcome to your Dashboard</h1>
-      <p>Email: {user.email}</p>
+      {/* Ensure user.email exists before rendering */}
+      <p>Email: {user.email ?? "No email available"}</p> {/* Default message if email is undefined */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         {dashboardButtons.map((button) => (
           <Link key={button.name} href={button.href}>
@@ -74,4 +86,3 @@ export default function DashboardPage() {
     </div>
   )
 }
-

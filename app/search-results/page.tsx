@@ -2,7 +2,7 @@
 
 "use client"
 
-import { useState } from "react"
+import { Suspense, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
@@ -64,9 +64,9 @@ const mockResults = {
   ],
 }
 
-export default function SearchResultsPage() {
+function SearchResultsPage() {
   const searchParams = useSearchParams()
-  const query = searchParams.get("q") || ""
+  const query = searchParams?.get("q") || ""
   const [activeTab, setActiveTab] = useState("all")
   const [sortBy, setSortBy] = useState("relevance")
 
@@ -183,3 +183,13 @@ export default function SearchResultsPage() {
   )
 }
 
+
+
+// Wrap the useSearchParams() hook inside Suspense for safe client-side rendering
+export function SearchResultsPageWrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SearchResultsPage />
+    </Suspense>
+  )
+}

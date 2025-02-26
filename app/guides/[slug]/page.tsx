@@ -126,7 +126,8 @@ const guidesData = {
 }
 
 export default function GuideProfilePage() {
-  const { slug } = useParams<{ slug: string }>()
+  const params = useParams<{ slug?: string }>()
+  const slug = params?.slug ?? "default-slug"
   const guide = guidesData[slug as keyof typeof guidesData]
   const [selectedTab, setSelectedTab] = useState("about")
 

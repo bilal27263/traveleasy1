@@ -62,7 +62,8 @@ const trips: Trip[] = [
 ]
 
 export default function TripListingsPage() {
-  const { slug } = useParams<{ slug: string }>()
+  const params = useParams<{ slug?: string }>()
+  const slug = params?.slug ?? "default-slug"
   const [filteredTrips, setFilteredTrips] = useState(trips)
   const [priceRange, setPriceRange] = useState([0, 500])
   const [showAuthPopup, setShowAuthPopup] = useState(false)

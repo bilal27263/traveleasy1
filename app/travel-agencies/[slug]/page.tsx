@@ -152,18 +152,21 @@ const guides = [
 // Mock data for reviews
 const reviews = [
   {
+    id: "1",
     slug: "1",
     user: { name: "Sarah T.", avatar: "/avatars/sarah.jpg" },
     rating: 5,
     text: "An unforgettable journey through Morocco. Every detail was perfect!",
   },
   {
+    id: "2",
     slug: "2",
     user: { name: "Michael R.", avatar: "/avatars/michael.jpg" },
     rating: 4,
     text: "Great mix of culture and adventure. Highly recommend the desert tour.",
   },
   {
+    id: "3",
     slug: "3",
     user: { name: "Emma L.", avatar: "/avatars/emma.jpg" },
     rating: 5,
@@ -172,7 +175,8 @@ const reviews = [
 ]
 
 export default function TravelAgencyProfilePage() {
-  const { slug } = useParams<{ slug: string }>()
+  const params = useParams<{ slug?: string }>()
+    const slug = params?.slug ?? "default-slug"
   const [followersCount, setFollowersCount] = useState(agencyData.followers)
   const [isFollowing, setIsFollowing] = useState(false)
   const [email, setEmail] = useState("")

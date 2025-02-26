@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, ReactNode } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { supabase } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Home, Map, FileText, Calendar, Users, Star, BarChart2, Settings, LogOut } from "lucide-react"
+import { User } from "@supabase/supabase-js"
 
 const commonSidebarItems = [
   { name: "Overview", icon: Home, href: "/dashboard" },
@@ -34,9 +35,9 @@ const userSidebarItems = [
   { name: "Reviews", icon: Star, href: "/dashboard/reviews" },
 ]
 
-export default function DashboardLayout({ children }) {
-  const [user, setUser] = useState(null)
-  const [userType, setUserType] = useState(null)
+export default function DashboardLayout({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<User | null>(null)
+  const [userType, setUserType] = useState<string | null>(null)
   const router = useRouter()
 
   useEffect(() => {
@@ -106,7 +107,7 @@ export default function DashboardLayout({ children }) {
           <div className="flex items-center space-x-4">
             <Avatar>
               <AvatarImage src={user.user_metadata.avatar_url} />
-              <AvatarFallback>{user.email[0].toUpperCase()}</AvatarFallback>
+              <AvatarFallback>{user.email?.[0].toUpperCase() || 'U'}</AvatarFallback>
             </Avatar>
             <span>{user.email}</span>
             <Button variant="outline" onClick={handleSignOut}>
@@ -120,4 +121,3 @@ export default function DashboardLayout({ children }) {
     </div>
   )
 }
-

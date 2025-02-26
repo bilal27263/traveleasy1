@@ -309,7 +309,7 @@ export default function Home() {
   )
 }
 
-function FeatureCard({ icon, title, description }) {
+function FeatureCard({ icon, title, description}: {icon: string, title:string, description: string}) {
   return (
     <Card className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg">
       <CardContent className="p-6 text-center">

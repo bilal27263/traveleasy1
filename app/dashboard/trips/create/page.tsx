@@ -23,7 +23,7 @@ export default function CreateTripPage() {
     currency: "USD",
   })
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
     setTripData((prevData) => ({ ...prevData, [name]: value }))
   }

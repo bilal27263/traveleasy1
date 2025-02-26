@@ -102,7 +102,7 @@ const trips = [
 
 // Mock data for gallery content
 const galleryContent = [
-  { id: "1", type: "image", url: "/gallery/morocco-1.jpg", likes: 45, caption: "Sunset over the Sahara" },
+  { id: "1", type: "image", url: "/gallery/morocco-1.jpg", thumbnail: "", likes: 45, caption: "Sunset over the Sahara" },
   {
     id: "2",
     type: "video",
@@ -111,8 +111,8 @@ const galleryContent = [
     likes: 78,
     caption: "Exploring the vibrant souks",
   },
-  { id: "3", type: "image", url: "/gallery/morocco-2.jpg", likes: 32, caption: "Traditional Moroccan tea ceremony" },
-  { id: "4", type: "image", url: "/gallery/morocco-3.jpg", likes: 56, caption: "Chefchaouen, the Blue Pearl" },
+  { id: "3", type: "image", url: "/gallery/morocco-2.jpg", thumbnail: "", likes: 32, caption: "Traditional Moroccan tea ceremony" },
+  { id: "4", type: "image", url: "/gallery/morocco-3.jpg", thumbnail: "", likes: 56, caption: "Chefchaouen, the Blue Pearl" },
   {
     id: "5",
     type: "video",
@@ -121,7 +121,7 @@ const galleryContent = [
     likes: 92,
     caption: "Camel trek through the dunes",
   },
-  { id: "6", type: "image", url: "/gallery/morocco-4.jpg", likes: 41, caption: "Ancient ruins of Volubilis" },
+  { id: "6", type: "image", url: "/gallery/morocco-4.jpg", thumbnail: "", likes: 41, caption: "Ancient ruins of Volubilis" },
 ]
 
 // Mock data for guides
@@ -172,7 +172,8 @@ const reviews = [
 ]
 
 export default function TravelAgencyProfilePage() {
-  const { id } = useParams<{ id: string }>()
+  const params = useParams<{ id?: string }>()
+  const id = params?.id ?? "default-id"
   const [followersCount, setFollowersCount] = useState(agencyData.followers)
   const [isFollowing, setIsFollowing] = useState(false)
   const [email, setEmail] = useState("")

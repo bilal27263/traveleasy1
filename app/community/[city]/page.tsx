@@ -149,7 +149,8 @@ const mockComments: Comment[] = [
 ]
 
 export default function CityDiscussionPage() {
-  const { city } = useParams<{ city: string }>()
+   const params = useParams<{ city?: string }>()
+    const city = params?.city ?? "default-city" // Replace with a fallback value
   const [comments, setComments] = useState<Comment[]>(mockComments)
   const [newComment, setNewComment] = useState("")
   const [isAuthenticated, setIsAuthenticated] = useState(false)

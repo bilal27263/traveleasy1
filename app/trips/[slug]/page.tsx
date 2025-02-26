@@ -39,18 +39,21 @@ const tripData = {
 
 const reviews = [
   {
+    id: "1",
     slug: "1",
     user: { name: "John Doe", avatar: "/avatars/john.jpg" },
     rating: 5,
     text: "Amazing tour! The guide was knowledgeable and friendly. Highly recommend!",
   },
   {
+    id: "2",
     slug: "2",
     user: { name: "Jane Smith", avatar: "/avatars/jane.jpg" },
     rating: 4,
     text: "Great experience overall. The medina was fascinating, but it was a bit rushed.",
   },
   {
+    id: "3",
     slug: "3",
     user: { name: "Mike Johnson", avatar: "/avatars/mike.jpg" },
     rating: 5,
@@ -65,7 +68,7 @@ const relatedTrips = [
 ]
 
 export default function TripDetailsPage() {
-  const { slug } = useParams<{ slug: string }>()
+  const slug = useParams<{ slug: string }>()
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   return (

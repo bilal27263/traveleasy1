@@ -43,6 +43,23 @@ const cities = [
   { name: "Essaouira", slug: "essaouira", threadCount: 10 },
 ]
 
+interface Post {
+  id: number;
+  title: string;
+  content: string;
+  author: {
+    name: string;
+    avatar: string;
+  };
+  upvotes: number;
+  comments: { user: string; content: string }[];
+  tags: string[];
+  timestamp: string;
+  isPinned: boolean;
+  image?: string;
+  likes: number;
+}
+
 // New mock data for discussions
 const discussions = [
   {
@@ -99,8 +116,8 @@ const recommendedArticles = [
 ]
 
 // New component for content feed item
-const ContentFeedItem = ({ post }) => {
-  const { user } = useAuth()
+const ContentFeedItem: React.FC<{ post: Post }> = ({ post }) => {
+  const { user } = useAuth() as { user: { id: string; name: string } | null };
   const [likes, setLikes] = useState(post.likes)
   const [comments, setComments] = useState(post.comments)
   const [newComment, setNewComment] = useState("")
@@ -183,34 +200,54 @@ const ContentFeedItem = ({ post }) => {
   )
 }
 
+interface Buddy {
+  user_id: string;
+  users: {
+    name: string;
+    avatar: string;
+  };
+}
+
+
 // New component for travel buddies
 const TravelBuddies = () => {
-  const { user } = useAuth()
+  const { user } = useAuth() as { user: User | null };
   const [destination, setDestination] = useState("")
   const [dates, setDates] = useState("")
-  const [buddies, setBuddies] = useState([])
+  const [buddies, setBuddies] = useState<Buddy[]>([]);
   const { toast } = useToast()
 
   const handleFindBuddies = async () => {
     if (!user) {
-      toast({ title: "Please log in to find travel buddies", variant: "destructive" })
-      return
+      toast({ title: "Please log in to find travel buddies", variant: "destructive" });
+      return;
     }
+  
+    // Insert the new travel plan
     const { data, error } = await supabase
       .from("travel_plans")
       .insert({ user_id: user.id, destination, dates })
-      .select()
+      .select();
+  
     if (!error) {
       const { data: buddiesData, error: buddiesError } = await supabase
         .from("travel_plans")
-        .select("user_id, users(name, avatar)")
+        .select("user_id, users!inner(name, avatar)") // Ensure users is joined properly
         .eq("destination", destination)
-        .neq("user_id", user.id)
-      if (!buddiesError) {
-        setBuddies(buddiesData)
+        .neq("user_id", user.id);
+  
+      if (!buddiesError && buddiesData) {
+        // Ensure users is treated as a single object
+        setBuddies(
+          buddiesData.map((buddy) => ({
+            user_id: buddy.user_id,
+            users: Array.isArray(buddy.users) ? buddy.users[0] : buddy.users, // Extract first user if array
+          }))
+        );
       }
     }
-  }
+  };
+  
 
   return (
     <Card>
@@ -247,10 +284,25 @@ const TravelBuddies = () => {
   )
 }
 
+
+interface User {
+  id: string;
+  name: string;
+  avatar?: string;
+}
+
+interface Story {
+  id: string;
+  user_id: string;
+  content: string;
+  created_at: string;
+  users?: User; // Adjust based on Supabase response
+}
+
 // New component for travel stories
 const TravelStories = () => {
-  const { user } = useAuth()
-  const [stories, setStories] = useState([])
+  const { user } = useAuth() as { user: User | null };
+  const [stories, setStories] = useState<Story[]>([]);
   const [newStory, setNewStory] = useState("")
   const { toast } = useToast()
 
@@ -301,10 +353,10 @@ const TravelStories = () => {
             <CardContent className="p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Avatar>
-                  <AvatarImage src={story.users.avatar} />
-                  <AvatarFallback>{story.users.name[0]}</AvatarFallback>
+                  <AvatarImage src={story.users?.avatar} />
+                  <AvatarFallback>{story.users?.name[0]}</AvatarFallback>
                 </Avatar>
-                <span className="font-semibold">{story.users.name}</span>
+                <span className="font-semibold">{story.users?.name}</span>
               </div>
               <p>{story.content}</p>
               <div className="flex items-center gap-4 mt-2">
@@ -331,7 +383,7 @@ const TravelStories = () => {
 
 export default function CommunityPage() {
   const [searchTerm, setSearchTerm] = useState("")
-  const [contentFeed, setContentFeed] = useState([])
+  const [contentFeed, setContentFeed] = useState<Post[]>([])
   const feedRef = useRef(null)
   const { user } = useAuth()
 

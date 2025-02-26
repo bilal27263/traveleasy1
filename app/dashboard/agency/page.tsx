@@ -9,12 +9,13 @@ import { TopDestinations } from "@/components/top-destinations"
 import { CalendarDateRangePicker } from "@/components/date-range-picker"
 import { Button } from "@/components/ui/button"
 import { Activity, CreditCard, DollarSign, Users } from "lucide-react"
+import { DateRange } from "react-day-picker"
 
 export default function AgencyDashboard() {
-  const [dateRange, setDateRange] = useState<{ from: Date; to: Date }>({
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
     from: new Date(2024, 0, 1),
     to: new Date(2024, 11, 31),
-  })
+  });  
 
   return (
     <TabsContent value="overview" className="space-y-4">

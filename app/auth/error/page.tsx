@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */ 
-
 "use client"
 
 import { useSearchParams } from "next/navigation"
@@ -10,8 +8,9 @@ import Link from "next/link"
 import { supabase } from "@/lib/supabase"
 import { useState } from "react"
 import { useToast } from "@/hooks/use-toast"
+import { Suspense } from "react" // Import Suspense
 
-export default function AuthError() {
+function AuthError() {
   const searchParams = useSearchParams()
   const [loading, setLoading] = useState(false)
   const { toast } = useToast()
@@ -43,12 +42,20 @@ export default function AuthError() {
         title: "Confirmation email sent",
         description: "Please check your email for the new confirmation link.",
       })
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to resend confirmation email.",
-        variant: "destructive",
-      })
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast({
+          title: "Error",
+          description: error.message || "Failed to resend confirmation email.",
+          variant: "destructive",
+        })
+      } else {
+        toast({
+          title: "Error",
+          description: "An unknown error occurred.",
+          variant: "destructive",
+        })
+      }
     } finally {
       setLoading(false)
     }
@@ -88,3 +95,11 @@ export default function AuthError() {
   )
 }
 
+// Wrap the useSearchParams() hook inside Suspense for safe client-side rendering
+export function AuthErrorWrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AuthError />
+    </Suspense>
+  )
+}

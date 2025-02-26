@@ -8,8 +8,8 @@ import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface CalendarDateRangePickerProps {
-  date: DateRange
-  setDate: (date: DateRange) => void
+  date: DateRange | undefined
+  setDate: (date: DateRange | undefined) => void
   className?: string
 }
 

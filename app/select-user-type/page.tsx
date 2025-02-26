@@ -7,8 +7,8 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { supabase } from "@/lib/supabase"
-import { useToast } from "@/components/ui/use-toast"
 import { redirectToDashboard } from "@/utils/auth"
+import { useToast } from "@/hooks/use-toast"
 
 export default function SelectUserType() {
   const [userType, setUserType] = useState("")
@@ -33,10 +33,11 @@ export default function SelectUserType() {
       })
 
       redirectToDashboard(userType, router)
-    } catch (error) {
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "An unknown error occurred"
       toast({
         title: "Error",
-        description: error.message,
+        description: errorMessage,
         variant: "destructive",
       })
     }

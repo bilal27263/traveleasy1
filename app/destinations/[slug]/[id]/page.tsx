@@ -94,7 +94,8 @@ const destinationsData = {
 }
 
 export default function DestinationPage() {
-  const { id } = useParams<{ id: string }>()
+  const params = useParams<{ id?: string }>()
+  const id = params?.id ?? "default-id"
   const [isSaved, setIsSaved] = useState(false)
 
   const destination = destinationsData[id as keyof typeof destinationsData]

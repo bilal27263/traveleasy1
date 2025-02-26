@@ -1,4 +1,4 @@
-import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context"
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 
 export const redirectToDashboard = (userType: string, router: AppRouterInstance) => {
   switch (userType) {

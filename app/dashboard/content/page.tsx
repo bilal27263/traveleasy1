@@ -106,7 +106,20 @@ export default function ContentPage() {
   )
 }
 
-function FeaturedContentCard({ item }) {
+type ContentItem = {
+  id: number
+  type: string
+  title: string
+  category: string
+  thumbnail: string
+  likes: number
+  shares: number
+  comments: number
+  featured: boolean
+}
+
+
+function FeaturedContentCard({ item }: { item: ContentItem }) {
   return (
     <motion.div whileHover={{ scale: 1.03 }} className="relative overflow-hidden rounded-lg shadow-lg">
       {/* ... (FeaturedContentCard implementation) */}
@@ -114,11 +127,10 @@ function FeaturedContentCard({ item }) {
   )
 }
 
-function ContentCard({ item }) {
+function ContentCard({ item }: { item: ContentItem }) {
   return (
     <motion.div whileHover={{ scale: 1.05 }} className="bg-white rounded-lg overflow-hidden shadow-md">
       {/* ... (ContentCard implementation) */}
     </motion.div>
   )
 }
-

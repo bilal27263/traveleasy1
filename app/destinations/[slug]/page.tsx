@@ -1,7 +1,7 @@
+import { CityTours } from "@/components/city-tours"
+import { CityTravelAgencies } from "@/components/city-travel-agencies"
+import { RelatedArticles } from "@/components/related-articles"
 import { notFound } from "next/navigation"
-import CityTravelAgencies from "../../../components/city-travel-agencies"
-import CityTours from "../../../components/city-tours"
-import RelatedArticles from "../../../components/related-articles"
 
 const destinations = [
   { slug: "paris", name: "Paris", description: "The City of Light", image: "/images/paris.jpg" },
@@ -43,7 +43,7 @@ export default function DestinationPage({ params }: { params: { slug: string } }
 
       <section>
         <h2 className="text-3xl font-semibold mb-6">Related Articles</h2>
-        <RelatedArticles destination={destination.name} />
+        <RelatedArticles city={destination.name} />
       </section>
     </div>
   )
