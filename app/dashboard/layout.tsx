@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Home, Map, FileText, Calendar, Users, Star, BarChart2, Settings, LogOut } from "lucide-react"
 import { SupabaseClient, User } from "@supabase/supabase-js"
 import { getProfile, getUser } from "@/utils/queries/user"
-import { createClient } from "@/utils/supabase/server"
+// import { createClient } from "@/utils/supabase/server"
 import { signOut } from "@/utils/signout"
 
 const commonSidebarItems = [
@@ -42,8 +42,8 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [userType, setUserType] = useState<string | null>(null)
   const router = useRouter()
-  const supabase = new SupabaseClient(process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
+  // const supabase = new SupabaseClient(process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  //     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 
       useEffect(() => {
         const fetchUserData = async () => {
