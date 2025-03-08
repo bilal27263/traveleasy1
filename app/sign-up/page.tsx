@@ -18,7 +18,13 @@ import { signUpAction } from "./actions";
 const formSchema = z
   .object({
     email: z.string().email("Please enter a valid email address").min(1, "Email is required"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
+    password: z
+      .string()
+      .min(8, "Password must be at least 8 characters long")
+      .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+      .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+      .regex(/\d/, "Password must contain at least one number")
+      .regex(/[@$!%*?&]/, "Password must contain at least one special character (@, $, !, %, *, ?, &)"),
     confirmPassword: z.string().min(1, "Please confirm your password"),
     fullName: z.string().min(1, "Full name is required"),
     userType: z.enum(["agency", "guide", "tourist", "visitor"], {
