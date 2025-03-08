@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { supabase } from "@/lib/supabase"
 import { User } from "@supabase/supabase-js"
+import { getProfile, getUser } from "@/utils/queries/user"
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null)
@@ -10,18 +11,15 @@ export function useAuth() {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
+      const user = await getUser()
       if (user) {
         setUser(user)
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("user_type")
-          .eq("id", user.id)
-          .single()
-        if (!error) {
-          setUserType(data?.user_type || "")
+        const data = await getProfile({user_id: user.id})
+        if(!data) {
+          return null
+        }
+        if (data) {
+          setUserType(data.user_type || "")
         }
       }
     }

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 "use client"
 
 import { useState } from "react"
@@ -10,7 +8,7 @@ import * as z from "zod"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { supabase } from "@/lib/supabase"
+import { signInWithEmailPassword } from "./actions"
 
 const signInSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -32,17 +30,21 @@ export default function SignIn() {
   async function onSubmit(values: z.infer<typeof signInSchema>) {
     setIsLoading(true)
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: values.email,
-        password: values.password,
-      })
+      const data = await signInWithEmailPassword(values.email, values.password)
 
-      if (error) throw error
-
-      router.push("/dashboard")
+      if (data) {
+        router.push("/dashboard")
+      }
     } catch (error) {
       console.error("Error during sign in:", error)
-      // Handle error (e.g., show error message to user)
+
+      // If Supabase error occurs, display it in the form
+      if (error instanceof Error) {
+        form.setError("email", {
+          type: "manual",
+          message: error.message || "An unknown error occurred",
+        })
+      }
     } finally {
       setIsLoading(false)
     }
@@ -89,4 +91,3 @@ export default function SignIn() {
     </div>
   )
 }
-

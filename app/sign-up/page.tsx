@@ -1,21 +1,19 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */ 
+"use client";
 
-"use client"
+import { useState, useTransition, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { supabase, checkSupabaseConnection } from "@/lib/supabase"
-import { useToast } from "@/hooks/use-toast"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { signUpAction } from "./actions";
 
 const formSchema = z
   .object({
@@ -30,19 +28,17 @@ const formSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
-  })
+  });
 
-type FormData = z.infer<typeof formSchema>
-
-const MAX_RETRIES = 3
-const RETRY_DELAY = 1000 // 1 second
+type FormData = z.infer<typeof formSchema>;
 
 export default function SignUp() {
-  const [loading, setLoading] = useState(false)
-  const [isOnline, setIsOnline] = useState(true)
-  const router = useRouter()
-  const { toast } = useToast()
+  const router = useRouter();
+  const { toast } = useToast();
+  const [isPending, startTransition] = useTransition();
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
+  // Use a single useForm instance
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -52,93 +48,28 @@ export default function SignUp() {
       fullName: "",
       userType: undefined,
     },
-  })
+  });
 
   useEffect(() => {
-    const checkConnection = async () => {
-      const online = await checkSupabaseConnection()
-      setIsOnline(online)
-    }
-    checkConnection()
-  }, [])
-
-  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
-
-  async function signUpWithRetry(data: FormData, retries = 0): Promise<any> {
-    try {
-      const { error: signUpError, data: signUpData } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-        options: {
-          data: {
-            user_type: data.userType,
-            full_name: data.fullName,
-          },
-        },
-      })
-
-      if (signUpError) {
-        throw signUpError
-      }
-
-      return signUpData
-    } catch (error: any) {
-      console.error("Sign up attempt error:", error)
-      if (retries < MAX_RETRIES && (error.name === "AuthRetryableFetchError" || error.message === "Failed to fetch")) {
-        await sleep(RETRY_DELAY * (retries + 1))
-        return signUpWithRetry(data, retries + 1)
-      }
-      throw error
-    }
-  }
+    // Your connection check if needed...
+  }, []);
 
   async function onSubmit(data: FormData) {
-    if (!isOnline) {
+    setErrorMsg(null);
+    const result = await signUpAction(data);
+    if (result.error) {
+      setErrorMsg(result.error.message);
       toast({
         title: "Error",
-        description: "You are currently offline. Please check your internet connection and try again.",
+        description: result.error.message,
         variant: "destructive",
-      })
-      return
-    }
-
-    setLoading(true)
-    try {
-      const signUpData = await signUpWithRetry(data)
-
-      if (!signUpData?.user) {
-        throw new Error("Failed to create account")
-      }
-
-      // Create profile entry
-      const { error: profileError } = await supabase.from("profiles").insert([
-        {
-          id: signUpData.user.id,
-          full_name: data.fullName,
-          user_type: data.userType,
-        },
-      ])
-
-      if (profileError) {
-        console.error("Error creating profile:", profileError)
-        throw new Error("Failed to create profile")
-      }
-
+      });
+    } else {
       toast({
         title: "Account created successfully",
         description: "Please check your email to confirm your account.",
-      })
-
-      router.push("/sign-in")
-    } catch (error: any) {
-      console.error("Sign up error:", error)
-      toast({
-        title: "Error",
-        description: error.message || "Failed to create account. Please try again.",
-        variant: "destructive",
-      })
-    } finally {
-      setLoading(false)
+      });
+      router.push("/sign-in");
     }
   }
 
@@ -150,14 +81,9 @@ export default function SignUp() {
           <CardDescription>Enter your details below to create your account</CardDescription>
         </CardHeader>
         <CardContent>
-          {!isOnline && (
-            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4" role="alert">
-              <p className="font-bold">Warning</p>
-              <p>You are currently offline. Please check your internet connection before signing up.</p>
-            </div>
-          )}
+          {errorMsg && <p className="text-red-500">{errorMsg}</p>}
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit((data) => startTransition(() => onSubmit(data)))} className="space-y-4">
               <FormField
                 control={form.control}
                 name="email"
@@ -167,7 +93,7 @@ export default function SignUp() {
                     <FormControl>
                       <Input placeholder="you@example.com" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage>{form.formState.errors.email?.message}</FormMessage>
                   </FormItem>
                 )}
               />
@@ -180,7 +106,7 @@ export default function SignUp() {
                     <FormControl>
                       <Input placeholder="John Doe" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage>{form.formState.errors.fullName?.message}</FormMessage>
                   </FormItem>
                 )}
               />
@@ -193,7 +119,7 @@ export default function SignUp() {
                     <FormControl>
                       <Input type="password" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage>{form.formState.errors.password?.message}</FormMessage>
                   </FormItem>
                 )}
               />
@@ -206,7 +132,7 @@ export default function SignUp() {
                     <FormControl>
                       <Input type="password" {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage>{form.formState.errors.confirmPassword?.message}</FormMessage>
                   </FormItem>
                 )}
               />
@@ -229,12 +155,12 @@ export default function SignUp() {
                         <SelectItem value="visitor">Visitor</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormMessage />
+                    <FormMessage>{form.formState.errors.userType?.message}</FormMessage>
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={loading || !isOnline}>
-                {loading ? "Creating account..." : "Create account"}
+              <Button type="submit" className="w-full" disabled={isPending}>
+                {isPending ? "Creating account..." : "Create account"}
               </Button>
             </form>
           </Form>
@@ -247,6 +173,5 @@ export default function SignUp() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
-

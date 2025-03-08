@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { supabase } from "@/lib/supabase"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Home, Map, FileText, Calendar, Users, Star, BarChart2, Settings } from "lucide-react"
+import { getUser } from "@/utils/queries/user"
 
 // Update the User interface to allow email to be string | undefined
 interface User {
@@ -36,9 +36,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
+      const user = await getUser()
       if (user) {
         setUser(user)
       } else {

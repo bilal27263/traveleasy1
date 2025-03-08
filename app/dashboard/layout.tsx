@@ -3,11 +3,14 @@
 import { useState, useEffect, ReactNode } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { supabase } from "@/lib/supabase"
+// import { supabase } from "@/lib/supabase"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Home, Map, FileText, Calendar, Users, Star, BarChart2, Settings, LogOut } from "lucide-react"
-import { User } from "@supabase/supabase-js"
+import { SupabaseClient, User } from "@supabase/supabase-js"
+import { getProfile, getUser } from "@/utils/queries/user"
+import { createClient } from "@/utils/supabase/server"
+import { signOut } from "@/utils/signout"
 
 const commonSidebarItems = [
   { name: "Overview", icon: Home, href: "/dashboard" },
@@ -39,31 +42,42 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [userType, setUserType] = useState<string | null>(null)
   const router = useRouter()
+  const supabase = new SupabaseClient(process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      if (user) {
-        setUser(user)
-        const { data, error } = await supabase.from("profiles").select("user_type").eq("id", user.id).single()
-        if (error) {
-          console.error("Error fetching user type:", error)
-          router.push("/")
-        } else {
-          setUserType(data.user_type)
-        }
-      } else {
-        router.push("/")
-      }
-    }
-    fetchUserData()
-  }, [router])
+      useEffect(() => {
+        const fetchUserData = async () => {
+          try {
+            const user = await getUser();
+            if (!user) {
+              console.error("User not found, redirecting to home");
+              router.push("/");
+              return;
+            }
+      
+            setUser(user);
+      
+            const profile = await getProfile({ user_id: user.id });
+      
+            if (!profile) {
+              console.error("Error fetching profile, redirecting to home");
+              router.push("/");
+              return;
+            }
+      
+            setUserType(profile.user_type);
+          } catch (error) {
+            console.error("Unexpected error fetching user data:", error);
+            router.push("/");
+          }
+        };
+      
+        fetchUserData();
+      }, [router]);
+      
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.push("/")
+    await signOut()
   }
 
   if (!user || !userType) {

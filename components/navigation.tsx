@@ -11,6 +11,8 @@ import { useToast } from "@/hooks/use-toast"
 import { useAuth } from "@/hooks/useAuth"
 import { redirectToDashboard } from "@/utils/auth"
 import { useRouter } from "next/navigation"
+import { Dialog, DialogTrigger, DialogContent } from "./ui/dialog"
+import SignIn from "./SignIn"
 
 export function Navigation() {
   const pathname = usePathname()
@@ -82,10 +84,18 @@ export function Navigation() {
               </>
             ) : (
               <>
-                <Button variant="outline" onClick={() => setShowAuthPopup(true)}>
-                  Sign Up
+                <Dialog>
+                  <DialogTrigger>
+                    <Button>Log In</Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <SignIn />
+                  </DialogContent>
+                </Dialog>
+
+                <Button variant={'outline'}>
+                  <Link href={'/sign-up'}>Sign Up</Link>
                 </Button>
-                <Button onClick={() => setShowAuthPopup(true)}>Log In</Button>
               </>
             )}
           </div>

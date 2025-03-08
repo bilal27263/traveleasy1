@@ -14,6 +14,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { supabase } from "@/lib/supabase"
 import { useToast } from "@/hooks/use-toast"
+import { signInWithEmailPassword } from "@/app/sign-in/actions"
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address").min(1, "Email is required"),
@@ -35,31 +36,28 @@ export default function SignIn() {
     },
   })
 
-  async function onSubmit(data: FormData) {
-    setLoading(true)
-    try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
-      })
-      if (error) throw error
-      toast({
-        title: "Signed in successfully",
-        description: "Welcome back!",
-      })
-      router.push("/dashboard")
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        toast({
-          title: "Error",
-          description: error.message,
-          variant: "destructive",
-        })
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+      setLoading(true)
+      try {
+        const data = await signInWithEmailPassword(values.email, values.password)
+  
+        if (data) {
+          router.push("/dashboard")
+        }
+      } catch (error) {
+        console.error("Error during sign in:", error)
+  
+        // If Supabase error occurs, display it in the form
+        if (error instanceof Error) {
+          form.setError("email", {
+            type: "manual",
+            message: error.message || "An unknown error occurred",
+          })
+        }
+      } finally {
+        setLoading(false)
       }
-    } finally {
-      setLoading(false)
     }
-  }
 
   const handleGoogleSignIn = async () => {
     try {
