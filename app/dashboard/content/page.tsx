@@ -1,5 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
-
 "use client"
 
 import { useState } from "react"
@@ -116,7 +114,6 @@ type ContentItem = {
   comments: number
   featured: boolean
 }
-
 
 function FeaturedContentCard({ item }: { item: ContentItem }) {
   return (
