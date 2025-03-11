@@ -2,6 +2,7 @@ import { CityTours } from "@/components/city-tours"
 import { CityTravelAgencies } from "@/components/city-travel-agencies"
 import { RelatedArticles } from "@/components/related-articles"
 import { notFound } from "next/navigation"
+import Image from "next/image"
 
 const destinations = [
   { slug: "paris", name: "Paris", description: "The City of Light", image: "/images/paris.jpg" },
@@ -20,7 +21,12 @@ export default function DestinationPage({ params }: { params: { slug: string } }
   return (
     <div className="space-y-12">
       <header className="relative h-96">
-        <img src={destination.image} alt={destination.name} className="object-cover w-full h-full" />
+        <Image
+          src={destination.image}
+          alt={destination.name}
+          layout="fill"
+          objectFit="cover"
+        />
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <h1 className="text-5xl font-bold text-white">{destination.name}</h1>
         </div>

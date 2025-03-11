@@ -117,12 +117,6 @@ const events = [
 
 export default function DestinationsPage() {
   const [currentBannerIndex, setCurrentBannerIndex] = useState(0)
-  const [searchParams, setSearchParams] = useState({
-    destination: "",
-    activity: "",
-    date: "",
-    budget: "",
-  })
 
   useEffect(() => {
     const timer = setInterval(() => {
