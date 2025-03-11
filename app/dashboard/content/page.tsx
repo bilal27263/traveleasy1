@@ -88,7 +88,7 @@ export default function ContentPage() {
           <h2 className="text-2xl font-semibold text-white mb-4">Featured Content</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {featuredContent.map((item) => (
-              <FeaturedContentCard key={item.id} item={item} />
+              <FeaturedContentCard key={item.id} />
             ))}
           </div>
         </div>
@@ -96,7 +96,7 @@ export default function ContentPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {regularContent.map((item) => (
-          <ContentCard key={item.id} item={item} />
+          <ContentCard key={item.id} />
         ))}
       </div>
     </div>
@@ -115,7 +115,7 @@ type ContentItem = {
   featured: boolean
 }
 
-function FeaturedContentCard({ item }: { item: ContentItem }) {
+function FeaturedContentCard() {
   return (
     <motion.div whileHover={{ scale: 1.03 }} className="relative overflow-hidden rounded-lg shadow-lg">
       {/* ... (FeaturedContentCard implementation) */}
@@ -123,7 +123,7 @@ function FeaturedContentCard({ item }: { item: ContentItem }) {
   )
 }
 
-function ContentCard({ item }: { item: ContentItem }) {
+function ContentCard() {
   return (
     <motion.div whileHover={{ scale: 1.05 }} className="bg-white rounded-lg overflow-hidden shadow-md">
       {/* ... (ContentCard implementation) */}
