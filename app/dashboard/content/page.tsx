@@ -103,18 +103,6 @@ export default function ContentPage() {
   )
 }
 
-type ContentItem = {
-  id: number
-  type: string
-  title: string
-  category: string
-  thumbnail: string
-  likes: number
-  shares: number
-  comments: number
-  featured: boolean
-}
-
 function FeaturedContentCard() {
   return (
     <motion.div whileHover={{ scale: 1.03 }} className="relative overflow-hidden rounded-lg shadow-lg">
