@@ -16,9 +16,27 @@ import { MapPicker } from "@/components/MapPicker"
 import { MediaUpload } from "@/components/MediaUpload"
 import { DateTimePicker } from "@/components/DateTimePicker"
 
+interface TripData {
+  title: string
+  description: string
+  seoKeywords: string
+  seoDescription: string
+  schedule: string
+  location: string
+  transportation: string
+  additionalDetails: string
+  price: string
+  currency: string
+  photos: File[]
+  videos: File[]
+  pdf: File | null
+  accountNumber: string
+  bookingLink: string
+}
+
 export default function CreateTripPage() {
   const router = useRouter()
-  const [tripData, setTripData] = useState({
+  const [tripData, setTripData] = useState<TripData>({
     title: "",
     description: "",
     seoKeywords: "",
@@ -29,11 +47,11 @@ export default function CreateTripPage() {
     additionalDetails: "",
     price: "",
     currency: "",
-    accountNumber: "",
-    bookingLink: "",
     photos: [],
     videos: [],
     pdf: null,
+    accountNumber: "",
+    bookingLink: "",
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

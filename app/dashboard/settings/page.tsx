@@ -285,13 +285,18 @@ export default function SettingsPage() {
     }))
   }
 
-  const handleNestedChange = (section: keyof FormData, parent: string, field: string, value: unknown) => {
+  const handleNestedChange = (
+    section: keyof FormData,
+    parent: keyof FormData["notifications"],
+    field: keyof FormData["notifications"]["email"] | keyof FormData["notifications"]["sms"] | keyof FormData["notifications"]["dnd"],
+    value: unknown
+  ) => {
     setFormData((prev) => ({
       ...prev,
       [section]: {
         ...prev[section],
         [parent]: {
-          ...(prev[section] as any)[parent],
+          ...(typeof prev[section][parent as keyof FormData[typeof section]] === 'object' ? prev[section][parent as keyof FormData[typeof section]] : {}),
           [field]: value,
         },
       },

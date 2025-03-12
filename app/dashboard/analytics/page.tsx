@@ -1,3 +1,4 @@
+import React from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
 import { BarChart2 } from "lucide-react"
@@ -12,7 +13,7 @@ const emptyData = [
   { name: "Jun", bookings: 0, revenue: 0 },
 ]
 
-export default function AnalyticsPage() {
+const AnalyticsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       <h1 className="text-3xl font-semibold text-gray-900">Analytics</h1>
@@ -67,4 +68,6 @@ export default function AnalyticsPage() {
     </div>
   )
 }
+
+export default AnalyticsPage
 
