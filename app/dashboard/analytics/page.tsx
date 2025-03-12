@@ -1,38 +1,33 @@
-"use client"
-
-import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { BarChart2 } from "lucide-react"
 
-const data = [
-  { name: "Jan", bookings: 40, revenue: 2400 },
-  { name: "Feb", bookings: 30, revenue: 1398 },
-  { name: "Mar", bookings: 50, revenue: 9800 },
-  { name: "Apr", bookings: 27, revenue: 3908 },
-  { name: "May", bookings: 18, revenue: 4800 },
-  { name: "Jun", bookings: 23, revenue: 3800 },
+// Empty data for the charts
+const emptyData = [
+  { name: "Jan", bookings: 0, revenue: 0 },
+  { name: "Feb", bookings: 0, revenue: 0 },
+  { name: "Mar", bookings: 0, revenue: 0 },
+  { name: "Apr", bookings: 0, revenue: 0 },
+  { name: "May", bookings: 0, revenue: 0 },
+  { name: "Jun", bookings: 0, revenue: 0 },
 ]
 
 export default function AnalyticsPage() {
-  const [timeRange, setTimeRange] = useState("6months")
-
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-semibold text-gray-900">Analytics</h1>
-        <Select value={timeRange} onValueChange={setTimeRange}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select time range" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="1month">Last Month</SelectItem>
-            <SelectItem value="3months">Last 3 Months</SelectItem>
-            <SelectItem value="6months">Last 6 Months</SelectItem>
-            <SelectItem value="1year">Last Year</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
+      <h1 className="text-3xl font-semibold text-gray-900">Analytics</h1>
+
+      {/* Empty state message */}
+      <Card>
+        <CardContent className="flex flex-col items-center justify-center py-10 text-center">
+          <BarChart2 className="h-12 w-12 text-gray-300 mb-4" />
+          <h3 className="text-lg font-medium text-gray-900 mb-1">No analytics data available yet</h3>
+          <p className="text-sm text-gray-500 mb-4">
+            Analytics will be displayed once you start receiving bookings and user activity
+          </p>
+        </CardContent>
+      </Card>
+
       <div className="grid gap-4 md:grid-cols-2">
         <Card>
           <CardHeader>
@@ -40,7 +35,7 @@ export default function AnalyticsPage() {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={data}>
+              <BarChart data={emptyData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
@@ -57,7 +52,7 @@ export default function AnalyticsPage() {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={data}>
+              <BarChart data={emptyData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
                 <YAxis />
