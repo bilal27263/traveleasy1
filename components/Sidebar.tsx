@@ -14,6 +14,7 @@ import {
   ChevronRight,
   Menu,
   UserPlus,
+  Building2,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -21,6 +22,7 @@ import { Button } from "@/components/ui/button"
 const navItems = [
   { name: "Home", href: "/dashboard", icon: Home },
   { name: "Trips", href: "/dashboard/trips", icon: Map },
+  { name: "Agency", href: "/dashboard/agency", icon: Building2 },
   { name: "Content", href: "/dashboard/content", icon: FileText },
   { name: "Events", href: "/dashboard/events", icon: Calendar },
   { name: "Customers", href: "/dashboard/customers", icon: Users },
