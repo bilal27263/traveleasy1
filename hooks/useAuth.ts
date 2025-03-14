@@ -5,46 +5,30 @@ import { supabase } from "@/lib/supabase"
 import { User } from "@supabase/supabase-js"
 import { getProfile, getUser } from "@/utils/queries/user"
 
+
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null)
   const [userType, setUserType] = useState<string>("tourist")
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const user = await getUser()
-      if (user) {
-        setUser(user)
-        const data = await getProfile({user_id: user.id})
-        if(!data) {
-          return null
-        }
-        if (data) {
-          setUserType(data.user_type || "")
-        }
-      }
+  const fetchUserData = async (onLogin?: () => void) => {
+    const user = await getUser()
+    if (user) {
+      setUser(user)
+      const data = await getProfile({ user_id: user.id })
+      setUserType(data?.user_type || "tourist")
+
+    } else {
+      setUser(null)
+      setUserType("tourist")
     }
+  }  
 
-    fetchUserData()
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("user_type")
-          .eq("id", session.user.id)
-          .single()
-        if (!error) {
-          setUserType(data?.user_type || "")
-        }
-      } else {
-        setUserType("tourist")
-      }
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange(() => {
+      fetchUserData()
     })
 
-    return () => {
-      authListener.subscription.unsubscribe()
-    }
+    return () => authListener.subscription.unsubscribe()
   }, [])
 
   const logout = async () => {
@@ -56,5 +40,5 @@ export function useAuth() {
     return true
   }
 
-  return { user, userType, logout }
+  return { user, userType, logout, refreshUser: () => fetchUserData() }
 }

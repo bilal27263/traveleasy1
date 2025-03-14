@@ -15,6 +15,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { supabase } from "@/lib/supabase"
 import { useToast } from "@/hooks/use-toast"
 import { signInWithEmailPassword } from "@/app/sign-in/actions"
+import { useAuth } from "@/hooks/useAuth"
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address").min(1, "Email is required"),
@@ -23,9 +24,10 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>
 
-export default function SignIn() {
+export default function SignIn({ onLoginSuccess }: { onLoginSuccess?: () => void }) {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
+  const { refreshUser } = useAuth();
   const { toast } = useToast()
 
   const form = useForm<FormData>({
@@ -43,6 +45,7 @@ export default function SignIn() {
   
         if (data) {
           router.push("/dashboard")
+          onLoginSuccess?.()
         }
       } catch (error) {
         console.error("Error during sign in:", error)
