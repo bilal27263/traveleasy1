@@ -1,134 +1,242 @@
 "use client"
 
 import { useState } from "react"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { MoreHorizontal, Mail, UserX, Loader2, Users, UserPlus } from "lucide-react"
-import { toast } from "@/hooks/use-toast"
+import { Input } from "@/components/ui/input"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Check, Loader2, MoreHorizontal, Send, Trash2 } from "lucide-react"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
-export function TeamMembersList() {
-  // Start with an empty list - no sample data
-  const [members, setMembers] = useState<
-    Array<{
-      id: string
-      name: string
-      email: string
-      role: string
-      status: string
-      avatar: string
-    }>
-  >([])
-  const [isLoading, setIsLoading] = useState<string | null>(null)
+// This would come from your API in a real application
+const initialTeamMembers = [
+  {
+    id: "1",
+    email: "jane@example.com",
+    name: "Jane Cooper",
+    role: "administrator",
+    status: "active",
+    joinedAt: "2023-01-15T00:00:00Z",
+  },
+  {
+    id: "2",
+    email: "alex@example.com",
+    name: "Alex Smith",
+    role: "editor",
+    status: "pending",
+    joinedAt: null,
+  },
+]
 
-  const handleResendInvite = async (memberId: string) => {
-    setIsLoading(memberId)
+type TeamMember = {
+  id: string
+  email: string
+  name: string
+  role: string
+  status: "active" | "pending"
+  joinedAt: string | null
+}
 
+interface TeamMembersListProps {
+  onActionSuccess: (message: string) => void
+  onActionError: (message: string) => void
+}
+
+export function TeamMembersList({ onActionSuccess, onActionError }: TeamMembersListProps) {
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([])
+  const [searchQuery, setSearchQuery] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [actionInProgress, setActionInProgress] = useState<string | null>(null)
+
+  // Simulating data fetch on component mount
+  useState(() => {
+    setTeamMembers([])
+  })
+
+  const filteredMembers = teamMembers.filter(
+    (member) =>
+      member.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      member.email.toLowerCase().includes(searchQuery.toLowerCase()),
+  )
+
+  const resendInvitation = async (member: TeamMember) => {
+    setActionInProgress(member.id)
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500))
-
-      toast({
-        title: "Invitation Resent",
-        description: "The invitation has been resent successfully.",
-      })
-    } catch {
-      toast({
-        title: "Error",
-        description: "Failed to resend invitation. Please try again.",
-        variant: "destructive",
-      })
+      onActionSuccess(`Invitation resent to ${member.name}`)
+    } catch (error) {
+      onActionError("Failed to resend invitation")
     } finally {
-      setIsLoading(null)
+      setActionInProgress(null)
     }
   }
 
-  const handleRemoveMember = async (memberId: string) => {
-    setIsLoading(memberId)
-
+  const removeMember = async (member: TeamMember) => {
+    setActionInProgress(member.id)
     try {
       // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1500))
-
-      setMembers((prev) => prev.filter((member) => member.id !== memberId))
-
-      toast({
-        title: "Member Removed",
-        description: "The team member has been removed successfully.",
-      })
-    } catch {
-      toast({
-        title: "Error",
-        description: "Failed to remove member. Please try again.",
-        variant: "destructive",
-      })
+      setTeamMembers(teamMembers.filter((m) => m.id !== member.id))
+      onActionSuccess(`${member.name} has been removed`)
+    } catch (error) {
+      onActionError("Failed to remove team member")
     } finally {
-      setIsLoading(null)
+      setActionInProgress(null)
     }
-  }
-
-  if (members.length === 0) {
-    return (
-      <div className="text-center py-6">
-        <div className="flex flex-col items-center justify-center py-8">
-          <Users className="h-12 w-12 text-gray-300 mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-1">No team members yet</h3>
-          <p className="text-sm text-gray-500 mb-4">Invite team members to collaborate on your agency dashboard</p>
-          <Button className="mt-2">
-            <UserPlus className="mr-2 h-4 w-4" /> Invite First Team Member
-          </Button>
-        </div>
-      </div>
-    )
   }
 
   return (
     <div className="space-y-4">
-      {members.map((member) => (
-        <div key={member.id} className="flex items-center justify-between p-4 border rounded-lg">
-          <div className="flex items-center space-x-4">
-            <Avatar>
-              <AvatarImage src={member.avatar} alt={member.name} />
-              <AvatarFallback>{member.name.slice(0, 2).toUpperCase()}</AvatarFallback>
-            </Avatar>
-            <div>
-              <h3 className="font-medium">{member.name}</h3>
-              <p className="text-sm text-gray-500">{member.email}</p>
-              <div className="flex items-center space-x-2 mt-1">
-                <Badge variant="outline" className="capitalize">
-                  {member.role}
-                </Badge>
-                <Badge variant={member.status === "active" ? "default" : "secondary"} className="capitalize">
-                  {member.status}
-                </Badge>
-              </div>
-            </div>
-          </div>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" disabled={isLoading === member.id}>
-                {isLoading === member.id ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <MoreHorizontal className="h-4 w-4" />
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => handleResendInvite(member.id)} disabled={member.status === "active"}>
-                <Mail className="mr-2 h-4 w-4" />
-                Resend Invitation
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => handleRemoveMember(member.id)} className="text-red-600">
-                <UserX className="mr-2 h-4 w-4" />
-                Remove Member
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+      <div className="flex items-center justify-between">
+        <Input
+          placeholder="Search team members..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="max-w-sm"
+        />
+        <div className="flex items-center text-sm text-gray-500">
+          {teamMembers.length} team member{teamMembers.length !== 1 ? "s" : ""}
         </div>
-      ))}
+      </div>
+
+      {loading ? (
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+        </div>
+      ) : teamMembers.length === 0 ? (
+        <div className="text-center py-8 border rounded-lg">
+          <h3 className="text-lg font-medium text-gray-900 mb-1">No team members yet</h3>
+          <p className="text-gray-500 mb-4">Invite team members to collaborate on your travel agency.</p>
+          <div className="flex justify-center">
+            <Button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Invite Team Member</Button>
+          </div>
+        </div>
+      ) : (
+        <div className="border rounded-lg overflow-hidden">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Role</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Joined</TableHead>
+                <TableHead className="w-[100px]"></TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {filteredMembers.map((member) => (
+                <TableRow key={member.id}>
+                  <TableCell>
+                    <div>
+                      <div className="font-medium">{member.name}</div>
+                      <div className="text-sm text-gray-500">{member.email}</div>
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <Badge variant="outline" className="capitalize">
+                      {member.role}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={member.status === "active" ? "default" : "secondary"}
+                      className="flex items-center gap-1"
+                    >
+                      {member.status === "active" ? (
+                        <Check className="h-3 w-3" />
+                      ) : (
+                        <div className="h-2 w-2 rounded-full bg-amber-500" />
+                      )}
+                      {member.status === "active" ? "Active" : "Pending"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {member.joinedAt ? (
+                      new Date(member.joinedAt).toLocaleDateString()
+                    ) : (
+                      <span className="text-gray-500">Not joined yet</span>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <MoreHorizontal className="h-4 w-4" />
+                          <span className="sr-only">Actions</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        {member.status === "pending" && (
+                          <DropdownMenuItem
+                            onClick={() => resendInvitation(member)}
+                            disabled={actionInProgress === member.id}
+                          >
+                            {actionInProgress === member.id ? (
+                              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                            ) : (
+                              <Send className="h-4 w-4 mr-2" />
+                            )}
+                            Resend Invitation
+                          </DropdownMenuItem>
+                        )}
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <DropdownMenuItem onSelect={(e) => e.preventDefault()} className="text-red-600">
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Remove
+                            </DropdownMenuItem>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Remove team member</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to remove {member.name}? This action cannot be undone.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction
+                                onClick={() => removeMember(member)}
+                                className="bg-red-600 hover:bg-red-700"
+                              >
+                                {actionInProgress === member.id ? (
+                                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                ) : null}
+                                Remove
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      )}
     </div>
   )
 }

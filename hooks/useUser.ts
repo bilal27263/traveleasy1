@@ -6,28 +6,22 @@ import type { User } from "@/types/user"
 export function useUser() {
   const [user, setUser] = useState<User>({
     id: "1",
-    name: "",
-    email: "",
-    profilePicture: "",
+    name: "John Doe",
+    email: "john@example.com",
+    profilePicture: "/placeholder-user.jpg",
     isVerified: false,
   })
 
   const verifyUser = async () => {
     // In a real application, this would be an API call
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-
-      setUser({
-        ...user,
-        isVerified: true,
-        verificationLink: "https://verification.example.com/" + Math.random().toString(36).substring(7),
-      })
-
-      return { success: true }
-    } catch (error) {
-      console.error("Verification error:", error)
-      return { success: false }
+    const response = await fetch("/api/verify-user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: user.id }),
+    })
+    const data = await response.json()
+    if (data.success) {
+      setUser({ ...user, isVerified: true, verificationLink: data.verificationLink })
     }
   }
 

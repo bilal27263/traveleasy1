@@ -25,6 +25,7 @@ export function RichTextEditor({ value, onChange, readonly = false }: RichTextEd
           "undo redo | formatselect | bold italic backcolor | \
           alignleft aligncenter alignright alignjustify | \
           bullist numlist outdent indent | removeformat | help",
+        readonly: readonly === true, // Explicitly convert to boolean
       }}
       disabled={readonly} // Add this as an additional safeguard
     />

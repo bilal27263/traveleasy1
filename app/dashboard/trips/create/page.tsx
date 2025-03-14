@@ -16,27 +16,9 @@ import { MapPicker } from "@/components/MapPicker"
 import { MediaUpload } from "@/components/MediaUpload"
 import { DateTimePicker } from "@/components/DateTimePicker"
 
-interface TripData {
-  title: string
-  description: string
-  seoKeywords: string
-  seoDescription: string
-  schedule: string
-  location: string
-  transportation: string
-  additionalDetails: string
-  price: string
-  currency: string
-  photos: File[]
-  videos: File[]
-  pdf: File | null
-  accountNumber: string
-  bookingLink: string
-}
-
 export default function CreateTripPage() {
   const router = useRouter()
-  const [tripData, setTripData] = useState<TripData>({
+  const [tripData, setTripData] = useState({
     title: "",
     description: "",
     seoKeywords: "",
@@ -46,12 +28,12 @@ export default function CreateTripPage() {
     transportation: "",
     additionalDetails: "",
     price: "",
-    currency: "",
+    currency: "USD",
+    accountNumber: "",
+    bookingLink: "",
     photos: [],
     videos: [],
     pdf: null,
-    accountNumber: "",
-    bookingLink: "",
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -101,13 +83,7 @@ export default function CreateTripPage() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="title">Title</Label>
-                <Input
-                  id="title"
-                  name="title"
-                  value={tripData.title}
-                  onChange={handleInputChange}
-                  placeholder="Enter trip title"
-                />
+                <Input id="title" name="title" value={tripData.title} onChange={handleInputChange} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="description">Description</Label>
@@ -115,13 +91,7 @@ export default function CreateTripPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="seoKeywords">SEO Keywords</Label>
-                <Input
-                  id="seoKeywords"
-                  name="seoKeywords"
-                  value={tripData.seoKeywords}
-                  onChange={handleInputChange}
-                  placeholder="Enter keywords separated by commas"
-                />
+                <Input id="seoKeywords" name="seoKeywords" value={tripData.seoKeywords} onChange={handleInputChange} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="seoDescription">SEO Description</Label>
@@ -130,7 +100,6 @@ export default function CreateTripPage() {
                   name="seoDescription"
                   value={tripData.seoDescription}
                   onChange={handleInputChange}
-                  placeholder="Enter a brief description for search engines"
                 />
               </div>
             </CardContent>
@@ -162,7 +131,6 @@ export default function CreateTripPage() {
                   name="transportation"
                   value={tripData.transportation}
                   onChange={handleInputChange}
-                  placeholder="Describe how travelers will get around"
                 />
               </div>
               <div className="space-y-2">
@@ -172,7 +140,6 @@ export default function CreateTripPage() {
                   name="additionalDetails"
                   value={tripData.additionalDetails}
                   onChange={handleInputChange}
-                  placeholder="Add any other important information"
                 />
               </div>
             </CardContent>
@@ -186,14 +153,7 @@ export default function CreateTripPage() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="price">Trip Price</Label>
-                <Input
-                  type="number"
-                  id="price"
-                  name="price"
-                  value={tripData.price}
-                  onChange={handleInputChange}
-                  placeholder="0.00"
-                />
+                <Input type="number" id="price" name="price" value={tripData.price} onChange={handleInputChange} />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="currency">Currency</Label>
@@ -218,18 +178,11 @@ export default function CreateTripPage() {
                   name="accountNumber"
                   value={tripData.accountNumber}
                   onChange={handleInputChange}
-                  placeholder="Enter account number"
                 />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="bookingLink">Booking Link</Label>
-                <Input
-                  id="bookingLink"
-                  name="bookingLink"
-                  value={tripData.bookingLink}
-                  onChange={handleInputChange}
-                  placeholder="Enter booking link"
-                />
+                <Input id="bookingLink" name="bookingLink" value={tripData.bookingLink} onChange={handleInputChange} />
               </div>
             </CardContent>
           </Card>
@@ -261,26 +214,20 @@ export default function CreateTripPage() {
               <CardTitle>Preview</CardTitle>
             </CardHeader>
             <CardContent>
-              {tripData.title ? (
-                <div className="prose max-w-none">
-                  <h2>{tripData.title}</h2>
-                  <div dangerouslySetInnerHTML={{ __html: tripData.description }} />
-                  <p>
-                    <strong>Location:</strong> {tripData.location || "Not specified"}
-                  </p>
-                  <p>
-                    <strong>Schedule:</strong> {tripData.schedule || "Not specified"}
-                  </p>
-                  <p>
-                    <strong>Price:</strong>{" "}
-                    {tripData.price ? `${tripData.price} ${tripData.currency}` : "Not specified"}
-                  </p>
-                </div>
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-gray-500">Fill out the previous tabs to see a preview of your trip</p>
-                </div>
-              )}
+              <div className="prose max-w-none">
+                <h2>{tripData.title}</h2>
+                <div dangerouslySetInnerHTML={{ __html: tripData.description }} />
+                <p>
+                  <strong>Location:</strong> {tripData.location}
+                </p>
+                <p>
+                  <strong>Schedule:</strong> {tripData.schedule}
+                </p>
+                <p>
+                  <strong>Price:</strong> {tripData.price} {tripData.currency}
+                </p>
+                {/* Add more preview content as needed */}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

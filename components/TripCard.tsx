@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Edit, BarChart2, Trash2, Star, Eye, MousePointer } from "lucide-react"
 
 interface TripCardProps {
+  id: number
   title: string
   description: string
   thumbnail: string
@@ -19,6 +20,7 @@ interface TripCardProps {
 }
 
 export function TripCard({
+  id,
   title,
   description,
   thumbnail,

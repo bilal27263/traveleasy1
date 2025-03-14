@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
-
+import { Badge } from "@/components/ui/badge"
 import { AlertCircle, Check, Copy, Eye, EyeOff, Globe, Info, Lock, RefreshCw, Smartphone, Loader2 } from "lucide-react"
 import { ProfileUploader } from "@/components/ProfileUploader"
 import { PasswordStrengthIndicator } from "@/components/PasswordStrengthIndicator"
@@ -48,82 +48,6 @@ const isValidUrl = (url: string) => {
   }
 }
 
-interface FormData {
-  agency: {
-    name: string
-    email: string
-    phone: string
-    website: string
-    address: string
-  }
-  preferences: {
-    language: string
-    currency: string
-    timezone: string
-    bookingWindow: string
-    minAdvance: string
-    cancellationPolicy: string
-    groupSize: string
-    customCancellation: string
-  }
-  payment: {
-    stripeEnabled: boolean
-    stripeKey: string
-    stripeSecret: string
-    paypalEnabled: boolean
-    bankTransferEnabled: boolean
-    bankName: string
-    accountHolder: string
-    iban: string
-    bic: string
-    companyName: string
-    taxId: string
-    billingEmail: string
-    billingPhone: string
-    billingAddress: string
-  }
-  notifications: {
-    email: {
-      bookings: boolean
-      cancellations: boolean
-      payments: boolean
-      reviews: boolean
-      marketing: boolean
-      system: boolean
-    }
-    sms: {
-      bookings: boolean
-      cancellations: boolean
-      payments: boolean
-      urgent: boolean
-    }
-    dnd: {
-      enabled: boolean
-      start: string
-      end: string
-    }
-  }
-  security: {
-    dataCollection: boolean
-    cookieConsent: boolean
-    marketingConsent: boolean
-    privacyPolicy: string
-    dataRetention: string
-    sessionTimeout: boolean
-    sessionDuration: string
-    ipRestriction: boolean
-  }
-}
-
-interface Errors {
-  agency: {
-    name: boolean
-    email: boolean
-    phone: boolean
-    website: boolean
-  }
-}
-
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("account")
   const [showPassword, setShowPassword] = useState(false)
@@ -137,7 +61,7 @@ export default function SettingsPage() {
   const [passwordMatch, setPasswordMatch] = useState(true)
 
   // Form data with empty initial states
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState({
     agency: {
       name: "",
       email: "",
@@ -205,7 +129,7 @@ export default function SettingsPage() {
   })
 
   // Validation state
-  const [errors, setErrors] = useState<Errors>({
+  const [errors, setErrors] = useState({
     agency: {
       name: false,
       email: false,
@@ -275,7 +199,7 @@ export default function SettingsPage() {
     return isValid
   }
 
-  const handleFormChange = (section: keyof FormData, field: string, value: unknown) => {
+  const handleFormChange = (section: string, field: string, value: any) => {
     setFormData((prev) => ({
       ...prev,
       [section]: {
@@ -285,18 +209,13 @@ export default function SettingsPage() {
     }))
   }
 
-  const handleNestedChange = (
-    section: keyof FormData,
-    parent: keyof FormData["notifications"],
-    field: keyof FormData["notifications"]["email"] | keyof FormData["notifications"]["sms"] | keyof FormData["notifications"]["dnd"],
-    value: unknown
-  ) => {
+  const handleNestedChange = (section: string, parent: string, field: string, value: any) => {
     setFormData((prev) => ({
       ...prev,
       [section]: {
         ...prev[section],
         [parent]: {
-          ...(typeof prev[section][parent as keyof FormData[typeof section]] === 'object' ? prev[section][parent as keyof FormData[typeof section]] : {}),
+          ...prev[section][parent],
           [field]: value,
         },
       },
@@ -318,7 +237,7 @@ export default function SettingsPage() {
         description: "Votre nouvelle clé API a été générée avec succès.",
         variant: "default",
       })
-    } catch {
+    } catch (error) {
       toast({
         title: "Erreur",
         description: "Impossible de générer une nouvelle clé API.",
@@ -366,7 +285,7 @@ export default function SettingsPage() {
       })
 
       setTimeout(() => setSaveSuccess(false), 3000)
-    } catch {
+    } catch (error) {
       toast({
         title: "Erreur",
         description: "Une erreur est survenue lors de l'enregistrement.",
@@ -425,8 +344,8 @@ export default function SettingsPage() {
           <TabsTrigger value="preferences">Préférences</TabsTrigger>
           <TabsTrigger value="payment">Paiement</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
-          <TabsTrigger value="team">Team & Partners</TabsTrigger>
           <TabsTrigger value="integrations">Intégrations</TabsTrigger>
+          <TabsTrigger value="team">Team & Partners</TabsTrigger>
           <TabsTrigger value="security">Sécurité</TabsTrigger>
         </TabsList>
 
@@ -446,7 +365,7 @@ export default function SettingsPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="agency-name">
-                        Nom de l&apos;Agence <span className="text-red-500">*</span>
+                        Nom de l'Agence <span className="text-red-500">*</span>
                       </Label>
                       <Input
                         id="agency-name"
@@ -455,7 +374,7 @@ export default function SettingsPage() {
                         onChange={(e) => handleFormChange("agency", "name", e.target.value)}
                         className={cn(errors.agency.name && "border-red-500")}
                       />
-                      {errors.agency.name && <p className="text-xs text-red-500">Le nom de agency est requis</p>}
+                      {errors.agency.name && <p className="text-xs text-red-500">Le nom de l'agence est requis</p>}
                     </div>
                     <div className="space-y-2">
                       <Label htmlFor="email">
@@ -513,7 +432,7 @@ export default function SettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Sécurité du Compte</CardTitle>
-              <CardDescription>Gérez votre mot de passe et les options authentification.</CardDescription>
+              <CardDescription>Gérez votre mot de passe et les options d'authentification.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -571,7 +490,7 @@ export default function SettingsPage() {
               </div>
               <div className="flex items-center space-x-2 pt-4">
                 <Switch id="two-factor" checked={twoFactorEnabled} onCheckedChange={setTwoFactorEnabled} />
-                <Label htmlFor="two-factor">Activer l&apos;authentification à deux facteurs</Label>
+                <Label htmlFor="two-factor">Activer l'authentification à deux facteurs</Label>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -579,7 +498,7 @@ export default function SettingsPage() {
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>
-                        L&apos;authentification à deux facteurs ajoute une couche de sécurité supplémentaire à votre compte.
+                        L'authentification à deux facteurs ajoute une couche de sécurité supplémentaire à votre compte.
                       </p>
                     </TooltipContent>
                   </Tooltip>
@@ -591,8 +510,8 @@ export default function SettingsPage() {
                     <Smartphone className="h-4 w-4" />
                     <AlertTitle>Configuration requise</AlertTitle>
                     <AlertDescription>
-                      Pour activer l&apos;authentification à deux facteurs, vous devez configurer une application
-                      d&apos;authentification comme Google Authenticator ou Authy.
+                      Pour activer l'authentification à deux facteurs, vous devez configurer une application
+                      d'authentification comme Google Authenticator ou Authy.
                     </AlertDescription>
                     <Button size="sm" className="mt-2">
                       Configurer maintenant
@@ -668,7 +587,14 @@ export default function SettingsPage() {
                 <div className="space-y-2">
                   <Label>Langues supportées</Label>
                   <div className="flex flex-wrap gap-2">
-                    <p className="text-sm text-gray-500">Aucune langue configurée</p>
+                    {formData.preferences.supportedLanguages ? (
+                      <div className="flex flex-wrap gap-2">
+                        {/* This would be dynamically generated from formData in a real app */}
+                        <Badge className="bg-blue-500">Français</Badge>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-gray-500">Aucune langue configurée</p>
+                    )}
                     <Button variant="outline" size="sm" className="h-6">
                       + Ajouter
                     </Button>
@@ -696,7 +622,7 @@ export default function SettingsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="min-advance">Réservation minimum à l&apos;avance (jours)</Label>
+                  <Label htmlFor="min-advance">Réservation minimum à l'avance (jours)</Label>
                   <Input
                     id="min-advance"
                     type="number"
@@ -706,7 +632,7 @@ export default function SettingsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="cancellation-policy">Politique d&apos;annulation</Label>
+                  <Label htmlFor="cancellation-policy">Politique d'annulation</Label>
                   <Select
                     value={formData.preferences.cancellationPolicy || undefined}
                     onValueChange={(value) => handleFormChange("preferences", "cancellationPolicy", value)}
@@ -715,9 +641,9 @@ export default function SettingsPage() {
                       <SelectValue placeholder="Sélectionnez une politique" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="flexible">Flexible (remboursement jusqu à 24h avant)</SelectItem>
-                      <SelectItem value="moderate">Modérée (remboursement jusqu à 5 jours avant)</SelectItem>
-                      <SelectItem value="strict">Stricte (remboursement jusqu à 14 jours avant)</SelectItem>
+                      <SelectItem value="flexible">Flexible (remboursement jusqu'à 24h avant)</SelectItem>
+                      <SelectItem value="moderate">Modérée (remboursement jusqu'à 5 jours avant)</SelectItem>
+                      <SelectItem value="strict">Stricte (remboursement jusqu'à 14 jours avant)</SelectItem>
                       <SelectItem value="custom">Personnalisée</SelectItem>
                     </SelectContent>
                   </Select>
@@ -734,7 +660,7 @@ export default function SettingsPage() {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="custom-cancellation">Politique d&apos;annulation personnalisée</Label>
+                <Label htmlFor="custom-cancellation">Politique d'annulation personnalisée</Label>
                 <Textarea
                   id="custom-cancellation"
                   placeholder="Décrivez votre politique d'annulation personnalisée ici..."
@@ -906,7 +832,7 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="company-name">Nom de l&apos;entreprise</Label>
+                  <Label htmlFor="company-name">Nom de l'entreprise</Label>
                   <Input
                     id="company-name"
                     placeholder="Nom légal de votre entreprise"
@@ -1120,14 +1046,14 @@ export default function SettingsPage() {
                         <Label htmlFor="booking-confirmation-enabled">Activer</Label>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="booking-confirmation-subject">Sujet de l&apos;email</Label>
+                        <Label htmlFor="booking-confirmation-subject">Sujet de l'email</Label>
                         <Input
                           id="booking-confirmation-subject"
                           placeholder="Confirmation de votre réservation avec {nom_agence}"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="booking-confirmation-template">Modèle d&apos;email</Label>
+                        <Label htmlFor="booking-confirmation-template">Modèle d'email</Label>
                         <Textarea
                           id="booking-confirmation-template"
                           rows={5}
@@ -1154,14 +1080,14 @@ L'équipe {nom_agence}"
                         <Label htmlFor="payment-confirmation-enabled">Activer</Label>
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="payment-confirmation-subject">Sujet de l&apos;email</Label>
+                        <Label htmlFor="payment-confirmation-subject">Sujet de l'email</Label>
                         <Input
                           id="payment-confirmation-subject"
                           placeholder="Confirmation de votre paiement pour {nom_agence}"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="payment-confirmation-template">Modèle d&apos;email</Label>
+                        <Label htmlFor="payment-confirmation-template">Modèle d'email</Label>
                         <Textarea
                           id="payment-confirmation-template"
                           rows={5}
@@ -1192,14 +1118,14 @@ L'équipe {nom_agence}"
                         <Input id="trip-reminder-days" type="number" placeholder="7" />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="trip-reminder-subject">Sujet de l&apos;email</Label>
+                        <Label htmlFor="trip-reminder-subject">Sujet de l'email</Label>
                         <Input
                           id="trip-reminder-subject"
                           placeholder="Rappel pour votre prochain voyage avec {nom_agence}"
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="trip-reminder-template">Modèle d&apos;email</Label>
+                        <Label htmlFor="trip-reminder-template">Modèle d'email</Label>
                         <Textarea
                           id="trip-reminder-template"
                           rows={5}
@@ -1220,77 +1146,6 @@ L'équipe {nom_agence}"
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="team" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Team & Partners Settings</CardTitle>
-              <CardDescription>Configure default settings for team members and partners.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium">Default Roles</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="default-team-role">Default Team Role</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select default role" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="admin">Administrator</SelectItem>
-                        <SelectItem value="manager">Manager</SelectItem>
-                        <SelectItem value="editor">Editor</SelectItem>
-                        <SelectItem value="viewer">Viewer</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="default-partner-type">Default Partner Type</Label>
-                    <Select>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select default type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="guide">Tour Guide</SelectItem>
-                        <SelectItem value="local_partner">Local Partner</SelectItem>
-                        <SelectItem value="hotel">Hotel Partner</SelectItem>
-                        <SelectItem value="transport">Transportation Partner</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              </div>
-
-              <Separator />
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium">Security Settings</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="invitation-expiry">Invitation Expiry (days)</Label>
-                    <Input type="number" id="invitation-expiry" placeholder="7" />
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Switch id="require-2fa" />
-                    <Label htmlFor="require-2fa">Require 2FA for team members</Label>
-                  </div>
-                </div>
-              </div>
-
-              <Separator />
-
-              <div className="space-y-4">
-                <h3 className="text-lg font-medium">Audit Logs</h3>
-                <div className="bg-gray-100 p-4 rounded-md">
-                  <p className="text-sm text-gray-500">
-                    Audit logs will appear here once team members or partners are invited.
-                  </p>
-                </div>
-              </div>
             </CardContent>
           </Card>
         </TabsContent>
@@ -1412,7 +1267,7 @@ L'équipe {nom_agence}"
                     <Globe className="h-8 w-8" />
                     <div>
                       <h3 className="font-medium">Mailchimp</h3>
-                      <p className="text-sm text-gray-500">Gérez vos campagnes de email marketing.</p>
+                      <p className="text-sm text-gray-500">Gérez vos campagnes d'email marketing.</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
@@ -1455,6 +1310,122 @@ L'équipe {nom_agence}"
                   </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Add the Team & Partners settings tab */}
+        <TabsContent value="team" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Team & Partners Permissions</CardTitle>
+              <CardDescription>Configure default roles and permissions for team members and partners.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-medium">Default Team Role</h3>
+                    <p className="text-sm text-gray-500">Set the default role for new team member invitations.</p>
+                  </div>
+                  <Select defaultValue="editor">
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="administrator">Administrator</SelectItem>
+                      <SelectItem value="manager">Manager</SelectItem>
+                      <SelectItem value="editor">Editor</SelectItem>
+                      <SelectItem value="viewer">Viewer</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-medium">Default Partner Role</h3>
+                    <p className="text-sm text-gray-500">Set the default role for new partner invitations.</p>
+                  </div>
+                  <Select defaultValue="guide">
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="guide">Tour Guide</SelectItem>
+                      <SelectItem value="local-expert">Local Expert</SelectItem>
+                      <SelectItem value="accommodation-partner">Accommodation Partner</SelectItem>
+                      <SelectItem value="transportation-partner">Transportation Partner</SelectItem>
+                      <SelectItem value="experience-provider">Experience Provider</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Invitation Settings</CardTitle>
+              <CardDescription>Configure how invitations are sent and managed.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-medium">Invitation Expiration</h3>
+                    <p className="text-sm text-gray-500">Set how long invitations remain valid.</p>
+                  </div>
+                  <Select defaultValue="7">
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder="Select days" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="3">3 days</SelectItem>
+                      <SelectItem value="7">7 days</SelectItem>
+                      <SelectItem value="14">14 days</SelectItem>
+                      <SelectItem value="30">30 days</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-medium">Email Verification</h3>
+                    <p className="text-sm text-gray-500">Require email verification before invitation acceptance.</p>
+                  </div>
+                  <Switch defaultChecked={true} />
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-medium">Two-Factor Authentication</h3>
+                    <p className="text-sm text-gray-500">Require 2FA for new team members.</p>
+                  </div>
+                  <Switch defaultChecked={false} />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Sandbox Mode</CardTitle>
+              <CardDescription>Test team and partner features without sending real invitations.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-medium">Enable Sandbox Mode</h3>
+                  <p className="text-sm text-gray-500">
+                    When enabled, invitations will be simulated but not actually sent.
+                  </p>
+                </div>
+                <Switch defaultChecked={false} />
+              </div>
+              <p className="text-sm text-gray-500 mt-2">
+                Sandbox mode is useful for testing the invitation flow without sending actual emails. All actions
+                performed in sandbox mode will be logged but not executed.
+              </p>
             </CardContent>
           </Card>
         </TabsContent>
@@ -1587,7 +1558,7 @@ L'équipe {nom_agence}"
 
           <Card>
             <CardHeader>
-              <CardTitle>Journal d Activité</CardTitle>
+              <CardTitle>Journal d'Activité</CardTitle>
               <CardDescription>Consultez les activités récentes sur votre compte.</CardDescription>
             </CardHeader>
             <CardContent>
@@ -1603,7 +1574,7 @@ L'équipe {nom_agence}"
                 </div>
                 <div className="pt-2">
                   <Button variant="outline" disabled>
-                    Voir tout l historique
+                    Voir tout l'historique
                   </Button>
                 </div>
               </div>

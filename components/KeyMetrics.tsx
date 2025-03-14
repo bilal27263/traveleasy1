@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 const metrics = [
-  { name: "Total Trips", value: "0" },
-  { name: "Total Bookings", value: "0" },
-  { name: "Revenue Earned", value: "$0" },
-  { name: "Trust Score", value: "—" },
-  { name: "Total Reviews", value: "0" },
+  { name: "Total Trips", value: "24" },
+  { name: "Total Bookings", value: "120" },
+  { name: "Revenue Earned", value: "$15,000" },
+  { name: "Trust Score", value: "4.8" },
+  { name: "Total Reviews", value: "96" },
 ]
 
 export function KeyMetrics() {

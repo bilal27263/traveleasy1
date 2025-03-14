@@ -1,68 +1,115 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { TeamInviteForm } from "@/components/TeamInviteForm"
-import { PartnerInviteForm } from "@/components/PartnerInviteForm"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { TeamMembersList } from "@/components/TeamMembersList"
 import { PartnersList } from "@/components/PartnersList"
+import { TeamMemberInvite } from "@/components/TeamMemberInvite"
+import { PartnerInvite } from "@/components/PartnerInvite"
+import { AlertCircle, CheckCircle, Users, UserPlus } from "lucide-react"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 export default function TeamPage() {
-  const [activeTab, setActiveTab] = useState("team")
+  const [activeTab, setActiveTab] = useState("team-members")
+  const [notification, setNotification] = useState<{
+    type: "success" | "error" | null
+    message: string
+  }>({ type: null, message: "" })
+
+  const showNotification = (type: "success" | "error", message: string) => {
+    setNotification({ type, message })
+    setTimeout(() => {
+      setNotification({ type: null, message: "" })
+    }, 5000)
+  }
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-semibold text-gray-900">Team & Partners</h1>
+        <h1 className="text-3xl font-semibold text-white">Team & Partners</h1>
+        {notification.type && (
+          <Alert
+            variant={notification.type === "success" ? "default" : "destructive"}
+            className={notification.type === "success" ? "bg-green-100 border-green-500" : undefined}
+          >
+            {notification.type === "success" ? (
+              <CheckCircle className="h-4 w-4 text-green-500" />
+            ) : (
+              <AlertCircle className="h-4 w-4" />
+            )}
+            <AlertTitle>{notification.type === "success" ? "Success" : "Error"}</AlertTitle>
+            <AlertDescription>{notification.message}</AlertDescription>
+          </Alert>
+        )}
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList>
-          <TabsTrigger value="team">Internal Team</TabsTrigger>
-          <TabsTrigger value="partners">Partners & Guides</TabsTrigger>
+      <Tabs defaultValue="team-members" onValueChange={setActiveTab}>
+        <TabsList className="grid w-full grid-cols-2">
+          <TabsTrigger value="team-members" className="flex items-center">
+            <Users className="mr-2 h-4 w-4" />
+            Team Members
+          </TabsTrigger>
+          <TabsTrigger value="partners" className="flex items-center">
+            <UserPlus className="mr-2 h-4 w-4" />
+            Partners & Guides
+          </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="team" className="space-y-4">
+        <TabsContent value="team-members" className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Invite Team Member</CardTitle>
-              <CardDescription>Add new members to your team and assign their roles.</CardDescription>
+              <CardDescription>
+                Invite internal team members to manage different aspects of your travel agency.
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <TeamInviteForm />
+              <TeamMemberInvite
+                onSuccess={(message) => showNotification("success", message)}
+                onError={(message) => showNotification("error", message)}
+              />
             </CardContent>
           </Card>
-
           <Card>
             <CardHeader>
               <CardTitle>Team Members</CardTitle>
               <CardDescription>Manage your team members and their roles.</CardDescription>
             </CardHeader>
             <CardContent>
-              <TeamMembersList />
+              <TeamMembersList
+                onActionSuccess={(message) => showNotification("success", message)}
+                onActionError={(message) => showNotification("error", message)}
+              />
             </CardContent>
           </Card>
         </TabsContent>
 
-        <TabsContent value="partners" className="space-y-4">
+        <TabsContent value="partners" className="space-y-6">
           <Card>
             <CardHeader>
               <CardTitle>Invite Partner or Guide</CardTitle>
-              <CardDescription>Add external partners and guides to collaborate with.</CardDescription>
+              <CardDescription>
+                Invite external partners or guides to collaborate with your travel agency.
+              </CardDescription>
             </CardHeader>
             <CardContent>
-              <PartnerInviteForm />
+              <PartnerInvite
+                onSuccess={(message) => showNotification("success", message)}
+                onError={(message) => showNotification("error", message)}
+              />
             </CardContent>
           </Card>
-
           <Card>
             <CardHeader>
               <CardTitle>Partners & Guides</CardTitle>
               <CardDescription>Manage your external partners and guides.</CardDescription>
             </CardHeader>
             <CardContent>
-              <PartnersList />
+              <PartnersList
+                onActionSuccess={(message) => showNotification("success", message)}
+                onActionError={(message) => showNotification("error", message)}
+              />
             </CardContent>
           </Card>
         </TabsContent>

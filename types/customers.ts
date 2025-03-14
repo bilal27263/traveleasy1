@@ -1,5 +1,3 @@
-import { CustomersPage } from "@/components/customers/CustomersPage"
-
 export type CustomerStatus = "active" | "inactive"
 export type TripStatus = "upcoming" | "completed" | "cancelled"
 
@@ -23,9 +21,5 @@ export interface Customer {
   preferredLanguage?: string
   status: CustomerStatus
   trips: Trip[]
-}
-
-export default function Page() {
-  return <CustomersPage />
 }
 
