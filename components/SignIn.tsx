@@ -27,7 +27,6 @@ type FormData = z.infer<typeof formSchema>
 export default function SignIn({ onLoginSuccess }: { onLoginSuccess?: () => void }) {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
-  const { refreshUser } = useAuth();
   const { toast } = useToast()
 
   const form = useForm<FormData>({
