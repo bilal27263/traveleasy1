@@ -188,7 +188,7 @@ export function CustomersPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               <AnimatePresence>
-                {filteredCustomers.map((customer) => (
+                {filteredCustomers.map((customer: Customer) => (
                   <motion.div
                     key={customer.id}
                     initial={{ opacity: 0, y: 20 }}

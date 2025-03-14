@@ -26,26 +26,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
-// This would come from your API in a real application
-const initialTeamMembers = [
-  {
-    id: "1",
-    email: "jane@example.com",
-    name: "Jane Cooper",
-    role: "administrator",
-    status: "active",
-    joinedAt: "2023-01-15T00:00:00Z",
-  },
-  {
-    id: "2",
-    email: "alex@example.com",
-    name: "Alex Smith",
-    role: "editor",
-    status: "pending",
-    joinedAt: null,
-  },
-]
-
 type TeamMember = {
   id: string
   email: string
@@ -63,7 +43,7 @@ interface TeamMembersListProps {
 export function TeamMembersList({ onActionSuccess, onActionError }: TeamMembersListProps) {
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([])
   const [searchQuery, setSearchQuery] = useState("")
-  const [loading, setLoading] = useState(false)
+  const [loading] = useState(false)
   const [actionInProgress, setActionInProgress] = useState<string | null>(null)
 
   // Simulating data fetch on component mount
