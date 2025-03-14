@@ -15,7 +15,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { supabase } from "@/lib/supabase"
 import { useToast } from "@/hooks/use-toast"
 import { signInWithEmailPassword } from "@/app/sign-in/actions"
-import { useAuth } from "@/hooks/useAuth"
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address").min(1, "Email is required"),
