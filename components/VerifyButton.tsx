@@ -14,6 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { CheckCircle, Shield, Globe, Gift, LockKeyhole } from "lucide-react"
+import Image from 'next/image';
 
 interface VerifyButtonProps {
   isVerified: boolean
@@ -79,7 +80,7 @@ export function VerifyButton({ isVerified, onVerify, onPromoClick }: VerifyButto
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-gray-500">
-                  Get a verified badge that signals travelers you're a legitimate and reputable agency.
+                  Get a verified badge that signals travelers you&apos;re a legitimate and reputable agency.
                 </p>
               </CardContent>
             </Card>
@@ -141,10 +142,12 @@ export function VerifyButton({ isVerified, onVerify, onPromoClick }: VerifyButto
             <div className="flex items-center space-x-2">
               <LockKeyhole className="w-4 h-4 text-gray-500" />
               <span className="text-sm text-gray-500">Secure payment powered by</span>
-              <img
+              <Image
                 src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-KzaCDQeSO0VfdKMktekij0OUv3D2LX.png"
                 alt="Gumroad"
                 className="h-5 object-contain"
+                width={20}
+                height={20}
               />
             </div>
           </div>

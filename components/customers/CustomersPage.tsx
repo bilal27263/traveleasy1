@@ -14,10 +14,11 @@ import { CustomerCardSkeleton } from "@/components/customers/CustomerCardSkeleto
 import { EmptyCustomers } from "@/components/customers/EmptyCustomers"
 import { useToast } from "@/hooks/use-toast"
 import type { Customer } from "@/types/customers"
+import Image from 'next/image';
 
 export function CustomersPage() {
   // State for customers (will be empty initially)
-  const [customers, setCustomers] = useState<Customer[]>([])
+  const [customers] = useState<Customer[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const [statusFilter, setStatusFilter] = useState<string>("all")
@@ -220,6 +221,8 @@ export function CustomersPage() {
           onMessage={() => handleMessageCustomer(selectedCustomer)}
         />
       )}
+      <p>We value our customers&apos; feedback.</p>
+      <Image src="/path/to/image.jpg" alt="Customer" width={500} height={500} />
     </div>
   )
 }
